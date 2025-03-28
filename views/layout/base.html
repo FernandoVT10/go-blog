@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{block "title" .}}{{end}}</title>
+        <link rel="stylesheet" href="/build/main.css"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+        {{ if .Dev }}
+            <script src="http://localhost:35729/livereload.js"></script>
+        {{ end }}
+    </head>
+    <body>
+        {{block "content" .}}{{end}}
+    </body>
+</html>
