@@ -1,11 +1,11 @@
 package html
 
 import (
-	"fmt"
+    "fmt"
 
-	"github.com/FernandoVT10/go-blog/internals/db"
-	. "maragu.dev/gomponents"
-	. "maragu.dev/gomponents/html"
+    "github.com/FernandoVT10/go-blog/internals/db"
+    . "maragu.dev/gomponents"
+    . "maragu.dev/gomponents/html"
 )
 
 func homeSocialMediaLink(link, iconName string) Node {

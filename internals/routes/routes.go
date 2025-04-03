@@ -1,13 +1,13 @@
 package routes
 
 import (
-	"net/http"
+    "net/http"
 
-	"github.com/FernandoVT10/go-blog/internals/db"
-	"github.com/FernandoVT10/go-blog/internals/html"
+    "github.com/FernandoVT10/go-blog/internals/db"
+    "github.com/FernandoVT10/go-blog/internals/html"
 
-	g "maragu.dev/gomponents"
-	ghttp "maragu.dev/gomponents/http"
+    g "maragu.dev/gomponents"
+    ghttp "maragu.dev/gomponents/http"
 )
 
 type BlogPostDoc struct {

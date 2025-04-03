@@ -1,10 +1,10 @@
 package html
 
 import (
-	"fmt"
+    "fmt"
     "os"
-	. "maragu.dev/gomponents"
-	. "maragu.dev/gomponents/html"
+    . "maragu.dev/gomponents"
+    . "maragu.dev/gomponents/html"
     . "maragu.dev/gomponents/components"
 )
 

@@ -78,12 +78,11 @@ async function handleScripts() {
 
 function startLiveReload() {
     const liveServer = livereload.createServer({
-        exts: ["css", "js", "html"],
-        delay: 200,
+        exts: ["css", "js", "go"],
+        delay: 500,
     });
     const buildDir = path.resolve(rootDir, "./build");
-    const viewsDir = path.resolve(rootDir, "./views");
-    liveServer.watch([buildDir, viewsDir]);
+    liveServer.watch([buildDir]);
     console.log("Livereload server started");
 }
 

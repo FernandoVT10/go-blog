@@ -25,5 +25,9 @@ func main() {
     db.Connect()
 
     fmt.Println("[INFO] Server listening on port", PORT)
-    http.ListenAndServe(fmt.Sprintf(":%d", PORT), router)
+    err := http.ListenAndServe(fmt.Sprintf(":%d", PORT), router)
+
+    if err != nil {
+        panic(err)
+    }
 }
