@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-      "dev": "node ./scripts/dev.js"
+    "dev": "node ./scripts/dev.js"
   },
   "keywords": [],
   "author": "",
@@ -16,5 +16,8 @@
     "livereload": "^0.9.3",
     "sass": "^1.86.0",
     "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "snabbdom": "^3.6.2"
   }
 }

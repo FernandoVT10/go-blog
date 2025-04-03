@@ -1,49 +1,29 @@
-package main;
+package main
 
 import (
     "net/http"
-    "html/template"
-    "path"
     "fmt"
-);
+    "github.com/FernandoVT10/go-blog/internals/routes"
+    "github.com/FernandoVT10/go-blog/internals/db"
+)
 
-const DEVELOPMENT = true;
-const PORT = 3000;
-const VIEWS_DIR = "./views";
-const STATIC_DIR = "./static";
-const BUILD_DIR = "./build";
-
-type BlogPost struct {
-    Id int;
-    Title string;
-    Cover string;
-};
-
-type HomePageData struct {
-    Dev bool;
-    BlogPosts []BlogPost;
-};
+const PORT = 3000
+const STATIC_DIR = "./static"
+const BUILD_DIR = "./build"
 
 func main() {
-    staticFs := http.FileServer(http.Dir(STATIC_DIR));
-    http.Handle("/static/", http.StripPrefix("/static/", staticFs));
+    router := http.NewServeMux()
 
-    buildFs := http.FileServer(http.Dir(BUILD_DIR));
-    http.Handle("/build/", http.StripPrefix("/build/", buildFs));
+    staticFs := http.FileServer(http.Dir(STATIC_DIR))
+    router.Handle("/static/", http.StripPrefix("/static/", staticFs))
 
-    homePath := path.Join(VIEWS_DIR, "home.html");
-    basePath := path.Join(VIEWS_DIR, "layout/base.html");
-    baseTmpl := template.Must(template.ParseFiles(basePath, homePath));
+    buildFs := http.FileServer(http.Dir(BUILD_DIR))
+    router.Handle("/build/", http.StripPrefix("/build/", buildFs))
 
-    http.HandleFunc("/",  func(w http.ResponseWriter, r *http.Request) {
-        baseTmpl.Execute(w, HomePageData{
-            Dev: DEVELOPMENT,
-            BlogPosts: []BlogPost {
-                { Id: 1, Title: "Test", Cover: "https://fvtblog.com/assets/covers/blog/8014-1732749325489.webp" },
-            },
-        });
-    });
+    router.Handle("/", routes.GetRoutes())
 
-    fmt.Println("[INFO] Server listening on port", PORT);
-    http.ListenAndServe(fmt.Sprintf(":%d", PORT), nil);
+    db.Connect()
+
+    fmt.Println("[INFO] Server listening on port", PORT)
+    http.ListenAndServe(fmt.Sprintf(":%d", PORT), router)
 }
