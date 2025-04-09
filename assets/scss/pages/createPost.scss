@@ -1,0 +1,117 @@
+@use "../variables" as *;
+
+.create-post {
+    background: hsl(var(--hsl-black-light));
+    padding: 20px;
+    max-width: 1200px;
+    margin: 40px auto;
+
+    & .input-group {
+        margin-top: 20px;
+    }
+
+    &__textarea {
+        margin-top: 20px;
+        outline: 0;
+        resize: none;
+        width: 100%;
+        height: 50vh;
+        min-height: 300px;
+        padding: 10px 20px;
+        border: solid 1px transparent;
+        background: hsl(var(--hsl-black-lighter));
+        transition: border-color .3s;
+        font-size: 14px;
+
+        &:focus {
+            border-color: hsl(var(--hsl-blue));
+        }
+    }
+
+    &__button {
+        margin-top: 20px;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        background: hsl(var(--hsl-blue-darker));
+        transition: background .3s, color .3s;
+
+        &:hover {
+            background: hsl(var(--hsl-blue-darker-2));
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+            background: hsl(var(--hsl-blue-darker-2));
+            color: hsl(var(--hsl-white-dark));
+        }
+    }
+}
+
+.cover-selector {
+    $cover-height: 300px;
+    height: $cover-height;
+    position: relative;
+
+    &__input {
+        display: none;
+    }
+
+    &__label {
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: dashed 3px hsla(var(--hsl-white), 0.5);
+        font-weight: bold;
+        font-size: var(--fz-16);
+        transition: .3s;
+
+        &:hover {
+            border-color: hsl(var(--hsl-blue));
+            color: hsl(var(--hsl-blue));
+            background: hsla(var(--hsl-blue), 0.2);
+        }
+    }
+
+    &__image {
+        width: 100%;
+        height: $cover-height;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    &__button {
+        cursor: pointer;
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        padding: 10px 15px;
+        background: hsl(var(--hsl-blue-darker));
+        border: none;
+        border-radius: 5px;
+        font-size: var(--fz-14);
+        display: flex;
+        align-items: center;
+        transition: background .3s;
+        box-shadow: 0 0 5px 0px hsl(var(--hsl-black-lighter));
+
+        & > svg {
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+            color: hsl(var(--hsl-white-dark));
+        }
+
+        &:hover {
+            background: hsl(var(--hsl-blue-darker-2));
+        }
+    }
+
+    @media #{$laptop} {
+        &__label { font-size: var(--fz-20) }
+    }
+}

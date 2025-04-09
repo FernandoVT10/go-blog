@@ -49,7 +49,7 @@ func navbar(isHome bool, title string) Node {
         Div(Class("navbar__container"),
             A(Class("navbar__link-icon"), Href("/"),
                 Img(Src("/static/icon.svg"), Alt("Icon"), Width("30"), Height("30")),
-                If(!isHome, H1(Class("navbar__link-title"), Text("Blog"))),
+                If(title != "", H1(Class("navbar__link-title"), Text("Blog"))),
             ),
 
             Ul(Class("navbar__link-list"),

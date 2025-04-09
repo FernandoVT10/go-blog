@@ -53,11 +53,14 @@ async function buildScripts() {
 
     console.log("Running esbuild");
     const inputGlob = path.resolve(rootDir, "./assets/ts/*.ts");
+    const libGlob = path.resolve(rootDir, "./assets/ts/lib/*.ts");
     const outDir = path.resolve(rootDir, "./build/js");
     const child = child_process.spawn(path.resolve(binDir, "esbuild"), [
         inputGlob,
+        libGlob,
         `--outdir=${outDir}`,
         "--bundle",
+        "--minify",
     ], { stdio: "inherit" });
 
     child.on("exit", (code) => {

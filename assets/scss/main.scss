@@ -1,8 +1,11 @@
 @use "./base";
 
 /* Pages */
-@use "./home";
-@use "./blog";
+@use "./pages/home";
+@use "./pages/blog";
+@use "./pages/blogPost";
+@use "./pages/createPost";
 
 /* Components */
-@use "./navbar";
+@use "./components/navbar";
+@use "./components/notify";

@@ -10,6 +10,7 @@ import (
 const PORT = 3000
 const STATIC_DIR = "./static"
 const BUILD_DIR = "./build"
+const UPLOADS_DIR = "./uploads"
 
 func main() {
     router := http.NewServeMux()
@@ -19,6 +20,9 @@ func main() {
 
     buildFs := http.FileServer(http.Dir(BUILD_DIR))
     router.Handle("/build/", http.StripPrefix("/build/", buildFs))
+
+    uploadsFs := http.FileServer(http.Dir(UPLOADS_DIR))
+    router.Handle("/uploads/", http.StripPrefix("/uploads/", uploadsFs))
 
     router.Handle("/", routes.GetRoutes())
 

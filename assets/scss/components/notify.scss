@@ -1,0 +1,109 @@
+$text-color: hsl(var(--hsl-white));
+$bg-color: hsl(var(--hsl-black-light));
+
+.notify-container {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    color: $text-color;
+    padding-bottom: 20px;
+    padding-right: 20px;
+    overflow: hidden;
+}
+
+.notification {
+    display: flex;
+    margin-top: 20px;
+    width: 300px;
+    background: $bg-color;
+    border-radius: 5px;
+    overflow: hidden;
+
+    $alpha: 0.2;
+
+    $success-text-color: hsl(var(--hsl-green));
+    $success-bg-color: hsla(var(--hsl-green), #{$alpha});
+
+    $loading-text-color: hsl(var(--hsl-blue));
+    $loading-bg-color: hsla(var(--hsl-blue), #{$alpha});
+
+    $error-text-color: hsl(var(--hsl-red));
+    $error-bg-color: hsla(var(--hsl-red), #{$alpha});
+
+    &--success {
+      --n-text-accent: #{$success-text-color};
+      --n-icon-background: #{$success-bg-color};
+    }
+
+    &--loading {
+      --n-text-accent: #{$loading-text-color};
+      --n-icon-background: #{$loading-bg-color};
+    }
+
+    &--error {
+        --n-text-accent: #{$error-text-color};
+        --n-icon-background: #{$error-bg-color};
+    }
+
+    &.fadein {
+        animation: fadein 0.2s forwards linear;
+    }
+
+    &.fadeout {
+        animation: fadeout 0.2s forwards linear;
+    }
+
+    &__icon {
+        padding: 0 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--n-icon-background);
+        color: var(--n-text-accent);
+    }
+
+    &__spinner {
+        display: block;
+        border: solid 3px var(--n-text-accent);
+        border-radius: 50%;
+        border-top: solid 3px transparent;
+        width: 20px;
+        height: 20px;
+        animation: spin 1s infinite linear;
+    }
+
+    &__message {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    &__close-btn {
+        background: transparent;
+        color: var(--n-text-accent);
+        padding: 0 10px;
+        border: none;
+        transition: .3s;
+
+        &:hover {
+            background: var(--n-icon-background);
+        }
+    }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg) }
+
+    to { transform: rotate(360deg) }
+}
+
+@keyframes fadein {
+    from { transform: translateX(300px) }
+    to { transform: translateX(0) }
+}
+
+@keyframes fadeout {
+    from { transform: translateX(0) }
+    to { transform: translateX(300px) }
+}

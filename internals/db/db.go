@@ -26,7 +26,7 @@ type Model struct {
     collectionName string
 }
 
-func (model Model) FindOne(result interface{}) error {
+func (model Model) FindOne(result any) error {
     ctx, cancel := context.WithTimeout(context.Background(), DB_TIMEOUT)
     defer cancel()
 
@@ -35,7 +35,7 @@ func (model Model) FindOne(result interface{}) error {
     return coll.FindOne(ctx, bson.D{{"title", "Test"}}).Decode(result)
 }
 
-func (model Model) Find(result interface{}) error {
+func (model Model) Find(result any) error {
     ctx, cancel := context.WithTimeout(context.Background(), DB_TIMEOUT)
     defer cancel()
 
@@ -47,6 +47,19 @@ func (model Model) Find(result interface{}) error {
     }
 
     return cur.All(context.Background(), result)
+}
+
+func (model Model) CreateOne(data any) (error, any) {
+    ctx, cancel := context.WithTimeout(context.Background(), DB_TIMEOUT)
+    defer cancel()
+
+    coll := db.Collection(model.collectionName)
+    res, err := coll.InsertOne(ctx, data)
+    if err != nil {
+        return err, nil
+    }
+
+    return nil, res.InsertedID
 }
 
 var BlogPostModel = Model{
