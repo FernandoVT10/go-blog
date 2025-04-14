@@ -90,3 +90,36 @@ button {
         font-weight: bold;
     }
 }
+
+.button {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background: var(--bg);
+    transition: background .3s, color .3s;
+
+    &--normal {
+        --bg: hsl(var(--hsl-blue-darker));
+        --bg-hover: hsl(var(--hsl-blue-darker-2));
+    }
+
+    &--danger {
+        --bg: hsl(var(--hsl-red-dark));
+        --bg-hover: hsl(var(--hsl-red-darker));
+    }
+
+    &--secondary {
+        --bg: hsl(var(--hsl-black-lighter));
+        --bg-hover: hsl(var(--hsl-black-lighter-2));
+    }
+
+    &:hover {
+        background: var(--bg-hover);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        background: var(--bg-hover);
+        color: hsl(var(--hsl-white-dark));
+    }
+}

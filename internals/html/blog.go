@@ -4,6 +4,7 @@ import (
     "fmt"
 
     "github.com/FernandoVT10/go-blog/internals/db"
+    "github.com/FernandoVT10/go-blog/internals/utils"
     . "maragu.dev/gomponents"
     . "maragu.dev/gomponents/html"
 )
@@ -24,8 +25,7 @@ func blogPostItem(blogPost db.BlogPost) Node {
 
                 Div(Class("blog-post-large-card__date"),
                     SVGIcon("clock", ""),
-                    // TODO: Add real date
-                    Span(Text("19 days ago")),
+                    Span(Text(utils.GetTimeAgo(blogPost.CreatedAt))),
                 ),
             ),
         ),

@@ -6,12 +6,26 @@ import (
 
     "github.com/FernandoVT10/go-blog/internals/db"
     "github.com/FernandoVT10/go-blog/internals/html"
+    "go.mongodb.org/mongo-driver/v2/mongo/options"
+    "go.mongodb.org/mongo-driver/v2/bson"
 
     g "maragu.dev/gomponents"
     ghttp "maragu.dev/gomponents/http"
+
+    httpUtils "github.com/FernandoVT10/go-blog/internals/utils/http"
 )
 
+type ErrorWithStatusCode struct {
+    Code int
+    error
+}
+
+func (e ErrorWithStatusCode) StatusCode() int {
+    return e.Code;
+}
+
 const POSTS_UPLOADS_URL = "http://localhost:3000/uploads/posts"
+const HOME_BLOG_POSTS_LIMIT = 3
 
 type BlogPostDoc struct {
     db.BlogPost
@@ -39,8 +53,8 @@ func GetRoutes() *http.ServeMux {
         ghttp.Adapt(func(w http.ResponseWriter, r *http.Request) (g.Node, error) {
             var blogPosts []db.BlogPost
 
-            // TODO: Add a limit of 3 posts only
-            db.BlogPostModel.Find(&blogPosts)
+            opts := options.Find().SetLimit(HOME_BLOG_POSTS_LIMIT)
+            db.BlogPostModel.Find(&blogPosts, bson.D{}, opts)
             ConvertCoversToUrl(blogPosts)
 
             return html.Home(blogPosts), nil
@@ -52,7 +66,9 @@ func GetRoutes() *http.ServeMux {
         ghttp.Adapt(func(w http.ResponseWriter, r *http.Request) (g.Node, error) {
             var blogPosts []db.BlogPost
 
-            db.BlogPostModel.Find(&blogPosts)
+            opts := options.Find().SetSort(bson.D{{Key: "createdAt", Value: db.DescendingSort}})
+            // TODO: handle this error
+            db.BlogPostModel.Find(&blogPosts, bson.D{}, opts)
             ConvertCoversToUrl(blogPosts)
 
             return html.Blog(blogPosts), nil
@@ -63,8 +79,21 @@ func GetRoutes() *http.ServeMux {
         "GET /blog/posts/{id}",
         ghttp.Adapt(func(w http.ResponseWriter, r *http.Request) (g.Node, error) {
             var blogPost db.BlogPost
-            // TODO: make this work correctly
-            db.BlogPostModel.FindOne(&blogPost)
+
+            id, err := bson.ObjectIDFromHex(r.PathValue("id"))
+            if err != nil {
+                // TODO: return a 404 page
+                return nil, httpUtils.ErrorWithStatusCode(http.StatusBadRequest)
+            }
+
+            db.BlogPostModel.FindById(&blogPost, id)
+            blogPost.Cover = ConvertCoverToUrl(blogPost.Cover)
+
+            if (blogPost == db.BlogPost{}) {
+                // TODO: return a 404 page
+                return nil, httpUtils.ErrorWithStatusCode(http.StatusNotFound)
+            }
+
             return html.BlogPost(blogPost), nil
         }),
     )

@@ -1,12 +1,19 @@
 package html
 
 import (
+    "fmt"
+
     "github.com/FernandoVT10/go-blog/internals/db"
+    "github.com/FernandoVT10/go-blog/internals/utils"
+
     . "maragu.dev/gomponents"
     . "maragu.dev/gomponents/html"
 )
 
 func BlogPost(blogPost db.BlogPost) Node {
+    contentHtml := utils.MarkdownToHTML(blogPost.Content)
+    postIdJs := fmt.Sprintf(`const postId = "%s";`, blogPost.Id.Hex())
+
     return layout(blogPost.Title,
         navbar(false, ""),
         Article(Class("blog-post"),
@@ -18,16 +25,25 @@ func BlogPost(blogPost db.BlogPost) Node {
                 ),
                 Div(Class("blog-post__date"),
                     SVGIcon("clock", ""),
-                    // TODO: get actual date
-                    Span(Text("19 days ago")),
+                    Time(
+                        Text(utils.GetTimeAgo(blogPost.CreatedAt)),
+                        Title(utils.FormatTime(blogPost.CreatedAt)),
+                        DateTime(blogPost.CreatedAt.String()),
+                    ),
                 ),
             ),
             Section(Class("blog-post__content-container"),
                 H1(Class("blog-post__title"), Text(blogPost.Title)),
-
-                // TODO: blogPost.Content is a markdown text, render it
-                Div(Class("blog-post__content"), Text(blogPost.Content)),
+                Div(Class("blog-post__content"), Raw(contentHtml)),
+                Button(
+                    ID("delete-post-btn"),
+                    Class("button button--danger"),
+                    Text("Delete Post"),
+                ),
             ),
         ),
+        Script(Raw(postIdJs)),
+        Script(Src("/build/js/lib/notify.js")),
+        Script(Src("/build/js/delete-post.js")),
     )
 }

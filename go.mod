@@ -3,13 +3,16 @@ module github.com/FernandoVT10/go-blog
 go 1.24.1
 
 require (
+	github.com/alecthomas/chroma/v2 v2.16.0
+	github.com/gomarkdown/markdown v0.0.0-20250311123330-531bef5e742b
+	github.com/h2non/bimg v1.1.9
 	go.mongodb.org/mongo-driver/v2 v2.1.0
 	maragu.dev/gomponents v1.1.0
 )
 
 require (
+	github.com/dlclark/regexp2 v1.11.5 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
-	github.com/h2non/bimg v1.1.9 // indirect
 	github.com/klauspost/compress v1.16.7 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.1.2 // indirect

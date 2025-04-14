@@ -99,7 +99,7 @@ class Notification {
         });
 
         this.el.addEventListener("animationend", () => {
-            if(this.el.classList.contains("fadein")) {
+            if(!this.el.classList.contains("fadeout")) {
                 this.el.classList.remove("fadein");
 
                 if(this.type !== NotificationType.Loading) {

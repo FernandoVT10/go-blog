@@ -11,6 +11,9 @@ import (
 const MAX_TITLE_LENGTH = 100
 const MAX_CONTENT_LENGTH = 5000
 
+
+type StringMap map[string]string
+
 var createPostValidator = []httpUtils.Validator{
     httpUtils.StringValidator{
         Required: true,
@@ -56,7 +59,26 @@ func getApiRoutes() *http.ServeMux {
                 httpUtils.SendJson(w, http.StatusOK, map[string]string{"postId": postId})
             },
         ),
-    );
+    )
+
+    router.HandleFunc(
+        "DELETE /posts/{id}",
+        func(w http.ResponseWriter, r *http.Request) {
+            id := r.PathValue("id")
+            if id == "" {
+                httpUtils.SendJson(w, http.StatusBadRequest, StringMap{"error": "Id is required"})
+                return
+            }
+
+            err := controllers.DeleteBlogPost(id)
+            if err != nil {
+                httpUtils.SendJson(w, http.StatusBadRequest, StringMap{"error": err.Error()})
+                return
+            }
+
+            w.WriteHeader(http.StatusOK);
+        },
+    )
 
     return router
 }
