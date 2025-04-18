@@ -24,6 +24,7 @@ func (e ErrorWithStatusCode) StatusCode() int {
     return e.Code;
 }
 
+const PUBLIC_DIR = "./public"
 const POSTS_UPLOADS_URL = "http://localhost:3000/uploads/posts"
 const HOME_BLOG_POSTS_LIMIT = 3
 
@@ -45,6 +46,9 @@ func ConvertCoversToUrl(blogPosts []db.BlogPost) {
 
 func GetRoutes() *http.ServeMux {
     router := http.NewServeMux()
+
+    publicFs := http.FileServer(http.Dir(PUBLIC_DIR))
+    router.Handle("/", publicFs)
 
     router.Handle("/api/", http.StripPrefix("/api", getApiRoutes()));
 

@@ -14,7 +14,12 @@ func BlogPost(blogPost db.BlogPost) Node {
     contentHtml := utils.MarkdownToHTML(blogPost.Content)
     postIdJs := fmt.Sprintf(`const postId = "%s";`, blogPost.Id.Hex())
 
-    return layout(blogPost.Title,
+    return page(
+        blogPost.Title,
+        []HeadNodes {
+            Script(Raw(postIdJs)),
+            utils.EsmJs("delete-post"),
+        },
         navbar(false, ""),
         Article(Class("blog-post"),
             Section(Class("blog-post__cover-container"),
@@ -42,8 +47,5 @@ func BlogPost(blogPost db.BlogPost) Node {
                 ),
             ),
         ),
-        Script(Raw(postIdJs)),
-        Script(Src("/build/js/lib/notify.js")),
-        Script(Src("/build/js/delete-post.js")),
     )
 }

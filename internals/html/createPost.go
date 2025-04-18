@@ -1,16 +1,19 @@
 package html
 
 import (
+    "github.com/FernandoVT10/go-blog/internals/utils"
+
     . "maragu.dev/gomponents"
     . "maragu.dev/gomponents/html"
 )
 
 func CreatePost() Node {
-    return layout("Create Blog Post",
+    return page(
+        "Create Blog Post",
+        []HeadNodes {
+            utils.EsmJs("create-post"),
+        },
         navbar(false, ""),
         Div(ID("create-post")),
-        Script(Src("/build/js/lib/notify.js")),
-        Script(Src("/build/js/lib/snabbdom.js")),
-        Script(Src("/build/js/create-post.js")),
     )
 }

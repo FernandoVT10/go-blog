@@ -8,27 +8,30 @@ import (
     . "maragu.dev/gomponents/components"
 )
 
-func layout(title string, children ...Node) Node {
+type HeadNodes = Node
+
+func page(title string, headNodes []HeadNodes, children ...Node) Node {
     dev := os.Getenv("APP_ENV") != "production"
 
-    return HTML5(HTML5Props {
+    commonHeadNodes := []Node {
+        Link(Rel("stylesheet"), Href("/build/main.css")),
+        Meta(Name("viewport"), Content("width=device-width, initial-scale=1.0")),
+        Link(Rel("icon"), Type("image/svg+xml"), Href("/favicon.svg")),
+        If(dev, Script(Src("http://localhost:35729/livereload.js"))),
+    }
+
+    return HTML5(HTML5Props{
         Title: title,
-        Head: []Node{
-            Link(Rel("stylesheet"), Href("/build/main.css")),
-            Meta(Name("viewport"), Content("width=device-width, initial-scale=1.0")),
-            Link(Rel("icon"), Type("image/svg+xml"), Href("/static/favicon.svg")),
-            If(dev, Script(Src("http://localhost:35729/livereload.js"))),
-        },
+        Head: append(commonHeadNodes, headNodes...),
         Body: children,
     })
 }
 
 func SVGIcon(iconName string, class string) Node {
     return SVG(If(class != "", Class(class)),
-        Raw(fmt.Sprintf(`<use href="/static/icons.svg#%s">`, iconName)),
+        Raw(fmt.Sprintf(`<use href="/icons.svg#%s">`, iconName)),
     )
 }
-
 
 func navbarLink(href, text string) Node {
     return Li(Class("navbar__link-item"),
@@ -48,7 +51,7 @@ func navbar(isHome bool, title string) Node {
     return Nav(Class(class),
         Div(Class("navbar__container"),
             A(Class("navbar__link-icon"), Href("/"),
-                Img(Src("/static/icon.svg"), Alt("Icon"), Width("30"), Height("30")),
+                Img(Src("/icon.svg"), Alt("Icon"), Width("30"), Height("30")),
                 If(title != "", H1(Class("navbar__link-title"), Text("Blog"))),
             ),
 

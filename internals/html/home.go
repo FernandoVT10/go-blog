@@ -106,7 +106,9 @@ func homeBlogPosts(blogPosts []db.BlogPost) Node {
 }
 
 func Home(blogPosts []db.BlogPost) Node {
-    return layout("Fernando Vaca Tamayo",
+    return page(
+        "Fernando Vaca Tamayo",
+        nil,
         navbar(true, ""),
         homeHeader(),
         Section(Class("page-wrapper"),

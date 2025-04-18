@@ -1,3 +1,5 @@
+import Notify from "./shared/notify";
+
 const BUTTON_ID = "delete-post-btn";
 const ESCAPE_CODE = "Escape";
 
@@ -73,7 +75,7 @@ class Modal {
     }
 
     private async deletePost() {
-        const n = window.Notify.loading("Deleting post...");
+        const n = Notify.loading("Deleting post...");
         this.close();
 
         try {
@@ -82,24 +84,20 @@ class Modal {
             });
 
             if(res.status === 200) {
-                window.Notify.success("Post deleted successfully!");
+                Notify.success("Post deleted successfully!");
                 window.setTimeout(() => {
                     window.location.href = "/";
                 }, 1000);
             } else {
                 const data = await res.json();
-                window.Notify.error(data.error);
+                Notify.error(data.error);
             }
         } catch(e) {
             console.error(e);
         }
 
-        window.Notify.remove(n);
+        Notify.remove(n);
     }
-}
-
-function handleDelete() {
-    console.log(`DELETE!!! ${postId}`);
 }
 
 window.addEventListener("DOMContentLoaded", () => {

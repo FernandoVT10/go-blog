@@ -1,19 +1,28 @@
+import {
+    h,
+    init,
+    classModule,
+    propsModule,
+    styleModule,
+    attributesModule,
+    eventListenersModule
+} from "snabbdom";
 import type { VNode } from "snabbdom";
 
-const snabbdom = window.snabbdom;
-const { h } = window.snabbdom;
+import Notify from "./shared/notify";
+
 const inputId = "cover-selector-input";
 
 const MAX_CONTENT_LENGTH = 5000;
 
 let vnode: VNode;
 
-const patch = snabbdom.init([
-    snabbdom.classModule,
-    snabbdom.propsModule,
-    snabbdom.styleModule,
-    snabbdom.attributesModule,
-    snabbdom.eventListenersModule,
+const patch = init([
+    classModule,
+    propsModule,
+    styleModule,
+    attributesModule,
+    eventListenersModule,
 ]);
 
 const data = {
@@ -50,7 +59,7 @@ async function handleChangeInput(e: Event) {
 
     const isImageValid = SUPPORTED_IMAGE_TYPES.find(v => v === file.type) !== undefined;
     if(!isImageValid) {
-        window.Notify.error("You must select a valid image");
+        Notify.error("You must select a valid image");
         return;
     }
 
@@ -77,7 +86,7 @@ function getImageOrLabel(): VNode {
                     props: { htmlFor: inputId },
                 },
                 [
-                    h("svg", h("use", { attrs: { href: "/static/icons.svg#image" } })),
+                    h("svg", h("use", { attrs: { href: "/icons.svg#image" } })),
                     "Change Cover",
                 ],
             ),
@@ -144,7 +153,7 @@ async function handleForm(e: Event) {
 
     const cover = formData.get("cover") as File;
     if(cover.size === 0) {
-        window.Notify.error("Cover is required");
+        Notify.error("Cover is required");
         return;
     }
 
@@ -162,7 +171,7 @@ async function handleForm(e: Event) {
             window.location.href = `/blog/posts/${json.postId}`;
         }
     } catch(e) {
-        window.Notify.error("There was an error trying to create the post");
+        Notify.error("There was an error trying to create the post");
         console.error(e);
     }
 

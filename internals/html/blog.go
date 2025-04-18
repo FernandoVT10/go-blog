@@ -39,7 +39,9 @@ func Blog(blogPosts []db.BlogPost) Node {
         posts = append(posts, blogPostItem(blogPost))
     }
 
-    return layout("Blog",
+    return page(
+        "Blog",
+        nil,
         navbar(false, "Blog"),
         Section(Class("page-wrapper"),
             Group(posts),

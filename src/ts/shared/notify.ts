@@ -1,14 +1,3 @@
-declare global {
-    interface Window {
-        Notify: {
-            success: (message: string) => number;
-            loading: (message: string) => number;
-            error: (message: string) => number;
-            remove: (id: number) => void;
-        },
-    }
-}
-
 enum NotificationType {
     Success,
     Error,
@@ -135,7 +124,7 @@ function pushNotification(type: NotificationType, message: string): number {
     return id;
 }
 
-window.Notify = {
+export default {
     success: (message: string): number => {
         return pushNotification(NotificationType.Success, message);
     },
