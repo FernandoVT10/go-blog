@@ -10,8 +10,30 @@
         margin-top: 20px;
     }
 
+    &__editor-opts {
+        margin: 20px 0;
+        margin-left: 20px;
+    }
+
+    &__editor-opt {
+        padding: 10px 20px;
+        margin-right: 10px;
+        border: none;
+        background: hsl(var(--hsl-black-light));
+        border: solid 1px transparent;
+        border-radius: 5px;
+
+        &:hover {
+            background: hsl(var(--hsl-black-lighter));
+        }
+
+        &--active {
+            background: hsl(var(--hsl-black-lighter));
+            border-color: hsl(var(--hsl-blue));
+        }
+    }
+
     &__textarea {
-        margin-top: 20px;
         outline: 0;
         resize: none;
         width: 100%;
@@ -26,6 +48,46 @@
         &:focus {
             border-color: hsl(var(--hsl-blue));
         }
+    }
+
+    &__preview {
+        padding: 20px;
+        background: hsl(var(--hsl-black));
+        min-height: 50vh;
+
+        & > pre {
+            background: hsl(var(--hsl-black-light));
+            padding: 20px;
+        }
+    }
+
+    &__preview-loader {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 50vh;
+        flex-direction: column;
+        row-gap: 10px;
+    }
+
+    &__preview-spinner {
+        width: 30px;
+        height: 30px;
+        display: block;
+        border: solid 4px hsl(var(--hsl-blue));
+        border-radius: 50%;
+        border-top: solid 4px transparent;
+        animation: spin 1s infinite linear;
+
+        @keyframes spin {
+            from { transfrom: rotate(0deg); }
+            to { transfrom: rotate(360deg); }
+        }
+    }
+
+    &__preview-text {
+        color: hsl(var(--hsl-blue));
+        font-weight: bold;
     }
 
     &__button {

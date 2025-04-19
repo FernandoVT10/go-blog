@@ -18,7 +18,7 @@ func BlogPost(blogPost db.BlogPost) Node {
         blogPost.Title,
         []HeadNodes {
             Script(Raw(postIdJs)),
-            utils.EsmJs("delete-post"),
+            utils.EsmJs("deletePost"),
         },
         navbar(false, ""),
         Article(Class("blog-post"),
@@ -39,7 +39,7 @@ func BlogPost(blogPost db.BlogPost) Node {
             ),
             Section(Class("blog-post__content-container"),
                 H1(Class("blog-post__title"), Text(blogPost.Title)),
-                Div(Class("blog-post__content"), Raw(contentHtml)),
+                Div(Class("blog-post__content markdown-container"), Raw(contentHtml)),
                 Button(
                     ID("delete-post-btn"),
                     Class("button button--danger"),

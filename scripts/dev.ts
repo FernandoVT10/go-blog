@@ -41,7 +41,7 @@ function esbuildOnEnd(res: es.BuildResult) {
 }
 
 async function esbuild() {
-    const inputGlob = path.resolve(ROOT_DIR, "src/ts/*.ts");
+    const inputGlob = path.resolve(ROOT_DIR, "src/ts/entries/*.ts");
     const ctx = await es.context({
         bundle: true,
         splitting: true,

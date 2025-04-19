@@ -2,8 +2,10 @@ package routes
 
 import (
     "net/http"
+    "encoding/json"
 
     "github.com/FernandoVT10/go-blog/internals/controllers"
+    "github.com/FernandoVT10/go-blog/internals/utils"
 
     httpUtils "github.com/FernandoVT10/go-blog/internals/utils/http"
 )
@@ -77,6 +79,30 @@ func getApiRoutes() *http.ServeMux {
             }
 
             w.WriteHeader(http.StatusOK);
+        },
+    )
+
+    router.HandleFunc(
+        "POST /render-markdown",
+        func(w http.ResponseWriter, r *http.Request) {
+            if r.Header.Get("Content-Type") != "application/json" {
+                httpUtils.SendJson(w, http.StatusBadRequest, StringMap{
+                    "error": `Content-Type should be "application/json"`,
+                })
+                return
+            }
+
+            var data map[string]string
+            err := json.NewDecoder(r.Body).Decode(&data)
+            if err != nil {
+                httpUtils.SendJson(w, http.StatusBadRequest, StringMap{"error": "Body couldn't be parsed"})
+                return
+            }
+
+            md := data["markdown"]
+            html := utils.MarkdownToHTML(md)
+
+            httpUtils.SendJson(w, http.StatusOK, StringMap{"rawHtml": html})
         },
     )
 

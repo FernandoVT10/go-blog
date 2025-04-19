@@ -1,4 +1,4 @@
-import Notify from "./shared/notify";
+import Notify from "../shared/notify";
 
 const BUTTON_ID = "delete-post-btn";
 const ESCAPE_CODE = "Escape";

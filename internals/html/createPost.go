@@ -11,7 +11,7 @@ func CreatePost() Node {
     return page(
         "Create Blog Post",
         []HeadNodes {
-            utils.EsmJs("create-post"),
+            utils.EsmJs("createPost"),
         },
         navbar(false, ""),
         Div(ID("create-post")),
