@@ -4,19 +4,24 @@ const SUPPORTED_IMAGE_TYPES = [
     "image/jpeg", "image/png", "image/jpg",
 ];
 
-export default class CreatePostController {
+type OnSubmitForm = (form: HTMLFormElement, ctrl: PostEditorController) => void;
+
+export default class PostEditorController {
     reRender: () => void;
     imageURL = "";
-    creatingPost = false;
+    loading = false;
     mdPreview = {
         show: false,
         loading: false,
         rawHtml: "",
     };
     content = "";
+    title = "";
+    onSubmitForm: OnSubmitForm;
 
-    constructor(reRender: () => void) {
+    constructor(reRender: () => void, onSubmitForm: OnSubmitForm) {
         this.reRender = reRender;
+        this.onSubmitForm = onSubmitForm;
     }
 
     private async readImageAsURL(image: File): Promise<string> {
@@ -53,35 +58,8 @@ export default class CreatePostController {
             .catch(e => console.error(e));
     }
 
-    async submitForm(form: HTMLFormElement) {
-        const formData = new FormData(form);
-
-        const cover = formData.get("cover") as File;
-        if(cover.size === 0) {
-            Notify.error("Cover is required");
-            return;
-        }
-
-        this.creatingPost = true;
-        this.reRender();
-
-        try {
-            const res = await fetch("/api/posts", {
-                method: "POST",
-                body: formData,
-            });
-
-            if(res.status === 200) {
-                const json = await res.json();
-                window.location.href = `/blog/posts/${json.postId}`;
-            }
-        } catch(e) {
-            Notify.error("There was an error trying to create the post");
-            console.error(e);
-        } finally {
-            this.creatingPost = false;
-            this.reRender();
-        }
+    submitForm(form: HTMLFormElement) {
+        this.onSubmitForm(form, this);
     }
 
     async setMDPreviewStatus(status: boolean) {
@@ -115,6 +93,11 @@ export default class CreatePostController {
 
     setContent(content: string) {
         this.content = content;
+        this.reRender();
+    }
+
+    setTitle(title: string) {
+        this.title = title;
         this.reRender();
     }
 }

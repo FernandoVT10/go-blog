@@ -13,6 +13,7 @@ import (
 func BlogPost(blogPost db.BlogPost) Node {
     contentHtml := utils.MarkdownToHTML(blogPost.Content)
     postIdJs := fmt.Sprintf(`const postId = "%s";`, blogPost.Id.Hex())
+    editPostLink := fmt.Sprintf("/blog/posts/%s/edit", blogPost.Id.Hex())
 
     return page(
         blogPost.Title,
@@ -40,10 +41,18 @@ func BlogPost(blogPost db.BlogPost) Node {
             Section(Class("blog-post__content-container"),
                 H1(Class("blog-post__title"), Text(blogPost.Title)),
                 Div(Class("blog-post__content markdown-container"), Raw(contentHtml)),
-                Button(
-                    ID("delete-post-btn"),
-                    Class("button button--danger"),
-                    Text("Delete Post"),
+                Div(Class("blog-post__buttons-container"),
+                    Button(
+                        ID("delete-post-btn"),
+                        Class("button button--danger"),
+                        Text("Delete Post"),
+                    ),
+                    A(Href(editPostLink),
+                        Button(
+                            Class("button button--normal"),
+                            Text("Edit Post"),
+                        ),
+                    ),
                 ),
             ),
         ),

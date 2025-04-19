@@ -1,6 +1,7 @@
 package http
 
 import (
+    "strings"
     "net/http"
     "fmt"
     "errors"
@@ -54,6 +55,10 @@ func (v ImageValidator) Validate(r *http.Request) error {
     _, info, err := r.FormFile(v.Key)
 
     if err != nil {
+        if !v.Required {
+            return nil
+        }
+
         return errors.New(fmt.Sprintf("%s is required", v.Key))
     }
 
@@ -62,6 +67,8 @@ func (v ImageValidator) Validate(r *http.Request) error {
     if !slices.Contains(supportedImagesTypes, fileType) {
         return errors.New("Only jpg, jpeg, and png files are supported")
     }
+
+    // TODO: validate if the image is valid
 
     return nil
 }
@@ -73,8 +80,8 @@ func ValidateReq(requestType RequestType, validators []Validator, next http.Hand
 
         switch requestType {
         case Multipart:
-            if err := r.ParseMultipartForm(0); err != nil {
-                http.Error(w, "Unable to parse form", http.StatusBadRequest)
+            if !strings.Contains(r.Header.Get("Content-Type"), "multipart/form-data") {
+                http.Error(w, `Invalid "Content-Type"`, http.StatusBadRequest)
                 return
             }
         }

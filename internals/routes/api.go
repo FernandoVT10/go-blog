@@ -33,6 +33,23 @@ var createPostValidator = []httpUtils.Validator{
     },
 }
 
+var editPostValidator = []httpUtils.Validator{
+    httpUtils.StringValidator{
+        Required: false,
+        MaxLength: MAX_TITLE_LENGTH,
+        Key: "title",
+    },
+    httpUtils.StringValidator{
+        Required: false,
+        MaxLength: MAX_CONTENT_LENGTH,
+        Key: "content",
+    },
+    httpUtils.ImageValidator{
+        Required: false,
+        Key: "cover",
+    },
+}
+
 func getApiRoutes() *http.ServeMux {
     router := http.NewServeMux()
 
@@ -80,6 +97,41 @@ func getApiRoutes() *http.ServeMux {
 
             w.WriteHeader(http.StatusOK);
         },
+    )
+
+    router.HandleFunc(
+        "PUT /posts/{id}",
+        httpUtils.ValidateReq(
+            httpUtils.Multipart,
+            editPostValidator,
+            func(w http.ResponseWriter, r *http.Request) {
+                id := r.PathValue("id")
+                if id == "" {
+                    httpUtils.SendJson(w, http.StatusBadRequest, StringMap{"error": "Id is required"})
+                    return
+                }
+
+                title := r.FormValue("title")
+                content := r.FormValue("content")
+
+                cover, _, err := r.FormFile("cover")
+                if err == nil {
+                    defer cover.Close()
+                }
+
+                err = controllers.UpdateBlogPost(id, controllers.UpdateBlogPostData{
+                    Title: title,
+                    Content: content,
+                    Cover: cover,
+                })
+                if err != nil {
+                    httpUtils.SendJson(w, http.StatusBadRequest, StringMap{"error": err.Error()})
+                    return
+                }
+
+                w.WriteHeader(http.StatusOK);
+            },
+        ),
     )
 
     router.HandleFunc(

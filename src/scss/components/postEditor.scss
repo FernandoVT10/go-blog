@@ -1,6 +1,6 @@
 @use "../variables" as *;
 
-.create-post {
+.post-editor {
     background: hsl(var(--hsl-black-light));
     padding: 20px;
     max-width: 1200px;
@@ -10,12 +10,12 @@
         margin-top: 20px;
     }
 
-    &__editor-opts {
+    &__content-editor-opts {
         margin: 20px 0;
         margin-left: 20px;
     }
 
-    &__editor-opt {
+    &__content-editor-opt {
         padding: 10px 20px;
         margin-right: 10px;
         border: none;
@@ -92,21 +92,6 @@
 
     &__button {
         margin-top: 20px;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        background: hsl(var(--hsl-blue-darker));
-        transition: background .3s, color .3s;
-
-        &:hover {
-            background: hsl(var(--hsl-blue-darker-2));
-        }
-
-        &:disabled {
-            cursor: not-allowed;
-            background: hsl(var(--hsl-blue-darker-2));
-            color: hsl(var(--hsl-white-dark));
-        }
     }
 }
 

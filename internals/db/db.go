@@ -92,6 +92,16 @@ func (model Model) DeleteOneById(id bson.ObjectID) error {
     return nil
 }
 
+func (model Model) UpdateById(id bson.ObjectID, data bson.M) error {
+    ctx, cancel := context.WithTimeout(context.Background(), DB_TIMEOUT)
+    defer cancel()
+
+    coll := db.Collection(model.collectionName)
+
+    _, err := coll.UpdateByID(ctx, id, bson.M{ "$set": data })
+    return err
+}
+
 var BlogPostModel = Model{
     collectionName: "BlogPosts",
     useTimestamps: true,

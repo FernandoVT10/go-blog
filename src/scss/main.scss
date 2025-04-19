@@ -4,9 +4,9 @@
 @use "./pages/home";
 @use "./pages/blog";
 @use "./pages/blogPost";
-@use "./pages/createPost";
 
 /* Components */
 @use "./components/navbar";
 @use "./components/notify";
 @use "./components/modal";
+@use "./components/postEditor";

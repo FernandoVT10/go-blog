@@ -2,6 +2,7 @@ package routes
 
 import (
     "net/http"
+    "encoding/json"
     "fmt"
 
     "github.com/FernandoVT10/go-blog/internals/db"
@@ -106,6 +107,36 @@ func GetRoutes() *http.ServeMux {
         "GET /blog/create-post",
         ghttp.Adapt(func(w http.ResponseWriter, r *http.Request) (g.Node, error) {
             return html.CreatePost(), nil
+        }),
+    )
+
+    router.HandleFunc(
+        "GET /blog/posts/{id}/edit",
+        ghttp.Adapt(func(w http.ResponseWriter, r *http.Request) (g.Node, error) {
+            var blogPost db.BlogPost
+
+            id, err := bson.ObjectIDFromHex(r.PathValue("id"))
+            if err != nil {
+                // TODO: return a 404 page
+                return nil, httpUtils.ErrorWithStatusCode(http.StatusBadRequest)
+            }
+
+            db.BlogPostModel.FindById(&blogPost, id)
+
+            if (blogPost == db.BlogPost{}) {
+                // TODO: return a 404 page
+                return nil, httpUtils.ErrorWithStatusCode(http.StatusNotFound)
+            }
+
+            blogPost.Cover = ConvertCoverToUrl(blogPost.Cover)
+
+            blogPostJSON, err := json.Marshal(blogPost)
+            if err != nil {
+                // TODO: return a 500 page
+                return nil, httpUtils.ErrorWithStatusCode(http.StatusInternalServerError)
+            }
+
+            return html.EditPost(blogPost, string(blogPostJSON)), nil
         }),
     )
 

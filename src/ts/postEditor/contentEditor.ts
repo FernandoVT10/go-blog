@@ -1,17 +1,17 @@
 import { h, VNode } from "snabbdom";
 
-import CreatePostController from "./controller";
+import PostEditorController from "./controller";
 
 const MAX_CONTENT_LENGTH = 5000;
 const CONTENT_TEXTAREA_ID = "content-textarea";
 
-function Options(ctrl: CreatePostController): VNode {
+function Options(ctrl: PostEditorController): VNode {
     const showPreview = ctrl.mdPreview.show;
-    const activeOptCls = ".create-post__editor-opt--active";
+    const activeOptCls = ".post-editor__content-editor-opt--active";
 
-    return h("div.create-post__editor-opts", [
+    return h("div.post-editor__content-editor-opts", [
         h(
-            `button.create-post__editor-opt${!showPreview ? activeOptCls : ""}`,
+            `button.post-editor__content-editor-opt${!showPreview ? activeOptCls : ""}`,
             {
                 props: { type: "button" },
                 on: { click: () => ctrl.setMDPreviewStatus(false) },
@@ -19,7 +19,7 @@ function Options(ctrl: CreatePostController): VNode {
             "Editor"
         ),
         h(
-            `button.create-post__editor-opt${showPreview ? activeOptCls : ""}`,
+            `button.post-editor__content-editor-opt${showPreview ? activeOptCls : ""}`,
             {
                 props: { type: "button" },
                 on: { click: () => ctrl.setMDPreviewStatus(true) },
@@ -29,24 +29,24 @@ function Options(ctrl: CreatePostController): VNode {
     ]);
 }
 
-function Preview(ctrl: CreatePostController): VNode {
+function Preview(ctrl: PostEditorController): VNode {
     if(ctrl.mdPreview.loading) {
-        return h("div.create-post__preview", [
-            h("div.create-post__preview-loader", [
-                h("span.create-post__preview-spinner"),
-                h("p.create-post__preview-text", "Rendering markdown..."),
+        return h("div.post-editor__preview", [
+            h("div.post-editor__preview-loader", [
+                h("span.post-editor__preview-spinner"),
+                h("p.post-editor__preview-text", "Rendering markdown..."),
             ]),
         ]);
     }
 
-    return h("div#create-post-preview.create-post__preview.markdown-container", {
+    return h("div.post-editor__preview.markdown-container", {
         props: { innerHTML: ctrl.mdPreview.rawHtml },
     });
 }
 
-function Textarea(ctrl: CreatePostController): VNode {
+function Textarea(ctrl: PostEditorController): VNode {
     return h(
-        `textarea#${CONTENT_TEXTAREA_ID}.create-post__textarea`,
+        `textarea#${CONTENT_TEXTAREA_ID}.post-editor__textarea`,
         {
             props: {
                 maxLength: MAX_CONTENT_LENGTH,
@@ -65,9 +65,9 @@ function Textarea(ctrl: CreatePostController): VNode {
     );
 }
 
-export default function(ctrl: CreatePostController): VNode {
+export default function(ctrl: PostEditorController): VNode {
     return h(
-        `div.create-post__editor`,
+        `div.post-editor__content-editor`,
         [
             Options(ctrl),
             ctrl.mdPreview.show ? Preview(ctrl) : Textarea(ctrl),
