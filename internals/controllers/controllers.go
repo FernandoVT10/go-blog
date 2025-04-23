@@ -10,11 +10,25 @@ import (
 
     "github.com/FernandoVT10/go-blog/internals/db"
     "go.mongodb.org/mongo-driver/v2/bson"
+    "go.mongodb.org/mongo-driver/v2/mongo/options"
 
     fileUtils "github.com/FernandoVT10/go-blog/internals/utils/file"
 )
 
+// TODO: make this configurable
+const POSTS_UPLOADS_URL = "http://localhost:3000/uploads/posts"
 const POSTS_UPLOADS_DIR = "./uploads/posts"
+
+func ConvertCoverToUrl(cover string) string {
+    return fmt.Sprintf("%s/%s", POSTS_UPLOADS_URL, cover)
+}
+
+// converts all covers names (19238...2.webp) into an url that can be send to the frontend
+func ConvertCoversToUrl(blogPosts []db.BlogPost) {
+    for i := range len(blogPosts) {
+        blogPosts[i].Cover = ConvertCoverToUrl(blogPosts[i].Cover)
+    }
+}
 
 func saveCover(cover multipart.File) (error, string) {
     coverName := fmt.Sprintf("%d.webp", time.Now().UnixNano())
@@ -113,4 +127,53 @@ func UpdateBlogPost(id string, data UpdateBlogPostData) error {
     db.BlogPostModel.UpdateById(idObj, updateData)
 
     return nil
+}
+
+type GetBlogPostsOpts struct {
+    Limit int64
+    Sort map[string]int
+}
+
+// returns posts with the cover as an url
+func GetBlogPosts(opts GetBlogPostsOpts) []db.BlogPost {
+    var blogPosts []db.BlogPost
+
+    queryOpts := options.Find()
+
+    if opts.Limit > 0 {
+        queryOpts = queryOpts.SetLimit(opts.Limit)
+    }
+
+
+    if len(opts.Sort) > 0 {
+        sortOpts := bson.D{}
+
+        for key, sortOpt := range opts.Sort {
+            sortOpts = append(sortOpts, bson.E{Key: key, Value: sortOpt})
+        }
+
+        queryOpts = queryOpts.SetSort(sortOpts)
+    }
+
+    db.BlogPostModel.Find(&blogPosts, bson.D{}, queryOpts)
+    ConvertCoversToUrl(blogPosts)
+
+    return blogPosts
+}
+
+func GetBlogPostByHexId(id string) (db.BlogPost, error) {
+    idObj, err := bson.ObjectIDFromHex(id)
+    if err != nil {
+        return db.BlogPost{}, nil
+    }
+
+    var blogPost db.BlogPost
+    err = db.BlogPostModel.FindById(&blogPost, idObj)
+    if err != nil {
+        return db.BlogPost{}, nil
+    }
+
+    blogPost.Cover = ConvertCoverToUrl(blogPost.Cover)
+
+    return blogPost, nil
 }
