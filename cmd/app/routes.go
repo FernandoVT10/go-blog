@@ -65,12 +65,17 @@ func definePages(router *router.Router) {
 
         return html.EditPost(blogPost, string(blogPostJSON)), nil
     }))
+
+    router.Get("/login", ghttp.Adapt(func(w http.ResponseWriter, r *http.Request) (g.Node, error) {
+        return html.Login(), nil
+    }))
 }
 
 type StringMap map[string]string
 
 const MAX_TITLE_LENGTH = 100
 const MAX_CONTENT_LENGTH = 5000
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 30 // 30 days in seconds
 
 var createPostValidator = []httpUtils.Validator{
     httpUtils.StringValidator{
@@ -186,17 +191,9 @@ func defineApi(router *router.Router) {
     )
 
     router.Post("/api/render-markdown", func(w http.ResponseWriter, r *http.Request) {
-        if r.Header.Get("Content-Type") != "application/json" {
-            httpUtils.SendJson(w, http.StatusBadRequest, StringMap{
-                "error": `Content-Type should be "application/json"`,
-            })
-            return
-        }
-
-        var data map[string]string
-        err := json.NewDecoder(r.Body).Decode(&data)
+        data, err := httpUtils.ParseJson(r)
         if err != nil {
-            httpUtils.SendJson(w, http.StatusBadRequest, StringMap{"error": "Body couldn't be parsed"})
+            httpUtils.SendJson(w, http.StatusBadRequest, StringMap{"error": err.Error()})
             return
         }
 
@@ -204,6 +201,37 @@ func defineApi(router *router.Router) {
         html := utils.MarkdownToHTML(md)
 
         httpUtils.SendJson(w, http.StatusOK, StringMap{"rawHtml": html})
+    })
+
+    router.Post("/api/login", func(w http.ResponseWriter, r *http.Request) {
+        data, err := httpUtils.ParseJson(r)
+        if err != nil {
+            httpUtils.SendJson(w, http.StatusBadRequest, StringMap{"error": err.Error()})
+            return
+        }
+
+        password := data["password"]
+
+        signedStr, err := controllers.Login(password)
+        if err != nil {
+            httpUtils.SendJson(w, http.StatusBadRequest, StringMap{"error": err.Error()})
+            return
+        }
+
+        cookie := http.Cookie{
+            Name: "token",
+            Value: signedStr,
+            Path: "/",
+            MaxAge: COOKIE_MAX_AGE,
+            HttpOnly: true,
+            // TODO: should be true if it's in production
+            Secure: false,
+            SameSite: http.SameSiteStrictMode,
+        }
+
+        http.SetCookie(w, &cookie)
+
+        w.WriteHeader(http.StatusOK)
     })
 }
 

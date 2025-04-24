@@ -1,0 +1,15 @@
+.login {
+    max-width: 400px;
+    margin: auto;
+    background: hsl(var(--hsl-black-light));
+    padding: 20px;
+    margin-top: 200px;
+
+    &__input {
+        margin-top: 20px;
+    }
+
+    &__button {
+        margin-top: 20px;
+    }
+}

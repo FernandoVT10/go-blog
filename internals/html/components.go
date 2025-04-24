@@ -58,7 +58,6 @@ func navbar(isHome bool, title string) Node {
             Ul(Class("navbar__link-list"),
                 navbarLink("/", "Home"),
                 navbarLink("/blog", "Blog"),
-                navbarLink("/projects", "Projects"),
                 navbarLink("/blog/create-post", "Create Post"),
             ),
         ),
