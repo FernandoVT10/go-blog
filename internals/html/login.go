@@ -6,13 +6,13 @@ import (
     . "maragu.dev/gomponents/html"
 )
 
-func Login() Node {
+func Login(pageData PageData) Node {
     return page(
         "Login",
         []HeadNodes{
             utils.EsmJs("login"),
         },
-        navbar(false, ""),
+        navbar(pageData.IsAuthenticated),
         Article(Class("login"),
             Form(ID("login-form"),
                 H1(Class("login__title"), Text("Login")),

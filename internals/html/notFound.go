@@ -5,9 +5,9 @@ import (
     . "maragu.dev/gomponents/html"
 )
 
-func NotFound() Node {
+func NotFound(pageData PageData) Node {
     return page("404", nil,
-        navbar(false, ""),
+        navbar(pageData.IsAuthenticated),
         Div(Class("not-found"),
             H1(Text("404")),
             H2(Text("Page Not Found")),

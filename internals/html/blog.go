@@ -32,7 +32,7 @@ func blogPostItem(blogPost db.BlogPost) Node {
     )
 }
 
-func Blog(blogPosts []db.BlogPost) Node {
+func Blog(blogPosts []db.BlogPost, pageData PageData) Node {
     posts := make([]Node, 0)
 
     for _, blogPost := range blogPosts {
@@ -42,7 +42,7 @@ func Blog(blogPosts []db.BlogPost) Node {
     return page(
         "Blog",
         nil,
-        navbar(false, "Blog"),
+        baseNavbar(false, "Blog", pageData.IsAuthenticated),
         Section(Class("page-wrapper"),
             Group(posts),
         ),

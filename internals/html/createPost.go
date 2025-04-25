@@ -7,13 +7,13 @@ import (
     . "maragu.dev/gomponents/html"
 )
 
-func CreatePost() Node {
+func CreatePost(pageData PageData) Node {
     return page(
         "Create Blog Post",
         []HeadNodes {
             utils.EsmJs("createPost"),
         },
-        navbar(false, ""),
+        navbar(pageData.IsAuthenticated),
         Div(ID("create-post")),
     )
 }

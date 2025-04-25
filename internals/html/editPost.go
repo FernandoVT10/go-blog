@@ -11,9 +11,11 @@ import (
 )
 
 // blogPostJSON is the blogPost encoded as JSON
-func EditPost(blogPost db.BlogPost, blogPostJSON string) Node {
+func EditPost(blogPost db.BlogPost, blogPostJSON string, pageData PageData) Node {
     title := fmt.Sprintf("Editing - %s", blogPost.Title)
-    scriptData := fmt.Sprintf("const blogPostJSON = %s;", strconv.Quote(blogPostJSON))
+    scriptData := fmt.Sprintf(
+        "const blogPostJSON = %s;", strconv.Quote(blogPostJSON),
+    )
 
     return page(
         title,
@@ -21,7 +23,7 @@ func EditPost(blogPost db.BlogPost, blogPostJSON string) Node {
             Script(Raw(scriptData)),
             utils.EsmJs("editPost"),
         },
-        navbar(false, ""),
+        navbar(pageData.IsAuthenticated),
         Div(ID("edit-post")),
     )
 }

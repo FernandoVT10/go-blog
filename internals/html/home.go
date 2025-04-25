@@ -105,11 +105,11 @@ func homeBlogPosts(blogPosts []db.BlogPost) Node {
     )
 }
 
-func Home(blogPosts []db.BlogPost) Node {
+func Home(blogPosts []db.BlogPost, pageData PageData) Node {
     return page(
         "Fernando Vaca Tamayo",
         nil,
-        navbar(true, ""),
+        baseNavbar(true, "", pageData.IsAuthenticated),
         homeHeader(),
         Section(Class("page-wrapper"),
             homePresentationSection(),

@@ -6,28 +6,17 @@ import (
     "regexp"
 )
 
-type segment struct {
-    literal string
-    wild bool
-}
-
-type route struct {
-    handler http.HandlerFunc
-    method string
-    segments []segment
-}
-
 type Router struct {
-    routes []route
+    routes []Route
 }
 
 func NewRouter() Router {
     return Router{
-        routes: make([]route, 0),
+        routes: make([]Route, 0),
     }
 }
 
-func (r *Router) DefineRoute(method string, path string, h http.HandlerFunc) {
+func (r *Router) DefineRoute(method string, path string, h http.HandlerFunc) *Route {
     if !strings.HasPrefix(path, "/") {
         path = "/" + path
     }
@@ -64,27 +53,29 @@ func (r *Router) DefineRoute(method string, path string, h http.HandlerFunc) {
         }
     }
 
-    r.routes = append(r.routes, route{
+    r.routes = append(r.routes, Route{
         handler: h,
         method: method,
         segments: segments,
     })
+
+    return &r.routes[len(r.routes) - 1]
 }
 
-func (r *Router) Get(path string, h http.HandlerFunc) {
-    r.DefineRoute("GET", path, h)
+func (r *Router) Get(path string, h http.HandlerFunc) *Route {
+    return r.DefineRoute("GET", path, h)
 }
 
-func (r *Router) Post(path string, h http.HandlerFunc) {
-    r.DefineRoute("POST", path, h)
+func (r *Router) Post(path string, h http.HandlerFunc) *Route {
+    return r.DefineRoute("POST", path, h)
 }
 
-func (r *Router) Put(path string, h http.HandlerFunc) {
-    r.DefineRoute("PUT", path, h)
+func (r *Router) Put(path string, h http.HandlerFunc) *Route {
+    return r.DefineRoute("PUT", path, h)
 }
 
-func (r *Router) Delete(path string, h http.HandlerFunc) {
-    r.DefineRoute("DELETE", path, h)
+func (r *Router) Delete(path string, h http.HandlerFunc) *Route {
+    return r.DefineRoute("DELETE", path, h)
 }
 
 // returns true when path is found
@@ -113,7 +104,7 @@ func (router Router) ServeHTTP(w http.ResponseWriter, r *http.Request) bool {
             }
         }
 
-        route.handler.ServeHTTP(w, r)
+        route.Serve(w, r)
         return true
     }
 

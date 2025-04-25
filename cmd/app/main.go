@@ -5,8 +5,9 @@ import (
     "path"
     "fmt"
     "os"
-    "github.com/FernandoVT10/go-blog/internals/html"
     "github.com/FernandoVT10/go-blog/internals/db"
+
+    httpUtils "github.com/FernandoVT10/go-blog/internals/utils/http"
 )
 
 const PUBLIC_DIR = "./public"
@@ -34,8 +35,7 @@ func main() {
             return
         }
 
-        notFoundNode := html.NotFound()
-        notFoundNode.Render(w)
+        httpUtils.Send404Page(w, r)
     })
 
     db.Connect()

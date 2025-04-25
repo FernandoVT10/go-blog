@@ -10,7 +10,7 @@ import (
     . "maragu.dev/gomponents/html"
 )
 
-func BlogPost(blogPost db.BlogPost) Node {
+func BlogPost(blogPost db.BlogPost, pageData PageData) Node {
     contentHtml := utils.MarkdownToHTML(blogPost.Content)
     postIdJs := fmt.Sprintf(`const postId = "%s";`, blogPost.Id.Hex())
     editPostLink := fmt.Sprintf("/blog/posts/%s/edit", blogPost.Id.Hex())
@@ -21,7 +21,7 @@ func BlogPost(blogPost db.BlogPost) Node {
             Script(Raw(postIdJs)),
             utils.EsmJs("deletePost"),
         },
-        navbar(false, ""),
+        navbar(pageData.IsAuthenticated),
         Article(Class("blog-post"),
             Section(Class("blog-post__cover-container"),
                 Img(
@@ -41,7 +41,7 @@ func BlogPost(blogPost db.BlogPost) Node {
             Section(Class("blog-post__content-container"),
                 H1(Class("blog-post__title"), Text(blogPost.Title)),
                 Div(Class("blog-post__content markdown-container"), Raw(contentHtml)),
-                Div(Class("blog-post__buttons-container"),
+                If(pageData.IsAuthenticated, Div(Class("blog-post__buttons-container"),
                     Button(
                         ID("delete-post-btn"),
                         Class("button button--danger"),
@@ -53,7 +53,7 @@ func BlogPost(blogPost db.BlogPost) Node {
                             Text("Edit Post"),
                         ),
                     ),
-                ),
+                )),
             ),
         ),
     )

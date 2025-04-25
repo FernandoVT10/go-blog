@@ -4,16 +4,11 @@ import (
     "errors"
     "net/http"
     "encoding/json"
+    "github.com/FernandoVT10/go-blog/internals/html"
+    "github.com/FernandoVT10/go-blog/internals/controllers"
+
+    g "maragu.dev/gomponents"
 )
-
-type errorWithStatusCode struct {
-    Code int
-    error
-}
-
-func (e errorWithStatusCode) StatusCode() int {
-    return e.Code
-}
 
 func SendJson(w http.ResponseWriter, statusCode int, data any) {
     w.Header().Add("Content-Type", "application/json")
@@ -23,10 +18,6 @@ func SendJson(w http.ResponseWriter, statusCode int, data any) {
     if err != nil {
         http.Error(w, "Unexpected server error", 500)
     }
-}
-
-func ErrorWithStatusCode(code int) error {
-    return errorWithStatusCode{code, nil}
 }
 
 type ParsedJson map[string]string
@@ -43,4 +34,23 @@ func ParseJson(r *http.Request) (ParsedJson, error) {
     }
 
     return data, nil
+}
+
+func SendNode(w http.ResponseWriter, r *http.Request, node g.Node) {
+    err := node.Render(w)
+    if err != nil {
+        http.Error(w, "error rendering node: "+err.Error(), http.StatusInternalServerError)
+    }
+}
+
+// returns data that is gonna be used for all pages
+func GetPageData(r *http.Request) html.PageData {
+    return html.PageData{
+        IsAuthenticated: controllers.IsAuthenticated(r),
+    }
+}
+
+func Send404Page(w http.ResponseWriter, r *http.Request) {
+    page := html.NotFound(GetPageData(r))
+    SendNode(w, r, page)
 }

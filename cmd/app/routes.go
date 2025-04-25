@@ -4,20 +4,19 @@ import (
     "encoding/json"
     "net/http"
     "github.com/FernandoVT10/go-blog/internals/controllers"
+    "github.com/FernandoVT10/go-blog/internals/middlewares"
     "github.com/FernandoVT10/go-blog/internals/router"
     "github.com/FernandoVT10/go-blog/internals/utils"
     "github.com/FernandoVT10/go-blog/internals/html"
     "github.com/FernandoVT10/go-blog/internals/db"
 
-    g "maragu.dev/gomponents"
-    ghttp "maragu.dev/gomponents/http"
     httpUtils "github.com/FernandoVT10/go-blog/internals/utils/http"
 )
 
 const HOME_BLOG_POSTS_LIMIT = 3
 
 func definePages(router *router.Router) {
-    router.Get("/", ghttp.Adapt(func(w http.ResponseWriter, r *http.Request) (g.Node, error) {
+    router.Get("/", func(w http.ResponseWriter, r *http.Request) {
         blogPosts := controllers.GetBlogPosts(controllers.GetBlogPostsOpts{
             Limit: HOME_BLOG_POSTS_LIMIT,
             Sort: map[string]int{
@@ -25,50 +24,60 @@ func definePages(router *router.Router) {
             },
         })
 
-        return html.Home(blogPosts), nil
-    }))
+        page := html.Home(blogPosts, httpUtils.GetPageData(r))
+        httpUtils.SendNode(w, r, page)
+    })
 
-    router.Get("/blog", ghttp.Adapt(func(w http.ResponseWriter, r *http.Request) (g.Node, error) {
+    router.Get("/blog", func(w http.ResponseWriter, r *http.Request) {
         blogPosts := controllers.GetBlogPosts(controllers.GetBlogPostsOpts{
             Sort: map[string]int{
                 "createdAt": db.DescendingSort,
             },
         })
-        return html.Blog(blogPosts), nil
-    }))
 
-    router.Get("/blog/posts/{id}", ghttp.Adapt(func(w http.ResponseWriter, r *http.Request) (g.Node, error) {
+        page := html.Blog(blogPosts, httpUtils.GetPageData(r))
+        httpUtils.SendNode(w, r, page)
+    })
+
+    router.Get("/blog/posts/{id}", func(w http.ResponseWriter, r *http.Request) {
         blogPost, err := controllers.GetBlogPostByHexId(r.PathValue("id"))
 
         if err != nil {
-            return html.NotFound(), nil
+            httpUtils.Send404Page(w, r)
+            return
         }
 
-        return html.BlogPost(blogPost), nil
-    }))
+        page := html.BlogPost(blogPost, httpUtils.GetPageData(r))
+        httpUtils.SendNode(w, r, page)
+    })
 
-    router.Get("/blog/create-post", ghttp.Adapt(func(w http.ResponseWriter, r *http.Request) (g.Node, error) {
-        return html.CreatePost(), nil
-    }))
+    router.Get("/blog/create-post", func(w http.ResponseWriter, r *http.Request) {
+        page := html.CreatePost(httpUtils.GetPageData(r))
+        httpUtils.SendNode(w, r, page)
+    }).Use(middlewares.AuthPage())
 
-    router.Get("/blog/posts/{id}/edit", ghttp.Adapt(func(w http.ResponseWriter, r *http.Request) (g.Node, error) {
+    router.Get("/blog/posts/{id}/edit", func(w http.ResponseWriter, r *http.Request) {
         blogPost, err := controllers.GetBlogPostByHexId(r.PathValue("id"))
         if err != nil {
-            return html.NotFound(), nil
+            httpUtils.Send404Page(w, r)
+            return
         }
 
         blogPostJSON, err := json.Marshal(blogPost)
         if err != nil {
             // TODO: return a 500 page
-            return nil, httpUtils.ErrorWithStatusCode(http.StatusInternalServerError)
+            httpUtils.Send404Page(w, r)
+            return
         }
 
-        return html.EditPost(blogPost, string(blogPostJSON)), nil
-    }))
+        page := html.EditPost(blogPost, string(blogPostJSON), httpUtils.GetPageData(r))
+        httpUtils.SendNode(w, r, page)
+    }).Use(middlewares.AuthPage())
 
-    router.Get("/login", ghttp.Adapt(func(w http.ResponseWriter, r *http.Request) (g.Node, error) {
-        return html.Login(), nil
-    }))
+    router.Get("/login", func(w http.ResponseWriter, r *http.Request) {
+        page := html.Login(httpUtils.GetPageData(r))
+        httpUtils.SendNode(w, r, page)
+    })
 }
 
 type StringMap map[string]string
@@ -137,7 +146,7 @@ func defineApi(router *router.Router) {
                 httpUtils.SendJson(w, http.StatusOK, map[string]string{"postId": postId})
             },
         ),
-    )
+    ).Use(middlewares.AuthApi())
 
     router.Delete("/api/posts/{id}", func(w http.ResponseWriter, r *http.Request) {
         id := r.PathValue("id")
@@ -153,7 +162,7 @@ func defineApi(router *router.Router) {
         }
 
         w.WriteHeader(http.StatusOK);
-    })
+    }).Use(middlewares.AuthApi())
 
     router.Put(
         "/api/posts/{id}",
@@ -188,7 +197,7 @@ func defineApi(router *router.Router) {
                 w.WriteHeader(http.StatusOK);
             },
         ),
-    )
+    ).Use(middlewares.AuthApi())
 
     router.Post("/api/render-markdown", func(w http.ResponseWriter, r *http.Request) {
         data, err := httpUtils.ParseJson(r)

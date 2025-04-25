@@ -10,6 +10,10 @@ import (
 
 type HeadNodes = Node
 
+type PageData struct {
+    IsAuthenticated bool
+}
+
 func page(title string, headNodes []HeadNodes, children ...Node) Node {
     dev := os.Getenv("APP_ENV") != "production"
 
@@ -39,7 +43,7 @@ func navbarLink(href, text string) Node {
     )
 }
 
-func navbar(isHome bool, title string) Node {
+func baseNavbar(isHome bool, title string, isAuthenticated bool) Node {
     var class string
 
     if isHome {
@@ -58,8 +62,13 @@ func navbar(isHome bool, title string) Node {
             Ul(Class("navbar__link-list"),
                 navbarLink("/", "Home"),
                 navbarLink("/blog", "Blog"),
-                navbarLink("/blog/create-post", "Create Post"),
+                If(isAuthenticated, navbarLink("/blog/create-post", "Create Post")),
             ),
         ),
     )
+}
+
+// general and most used navbar
+func navbar(isAuthenticated bool) Node {
+    return baseNavbar(false, "", isAuthenticated)
 }
