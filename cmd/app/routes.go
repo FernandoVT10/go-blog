@@ -65,8 +65,7 @@ func definePages(router *router.Router) {
 
         blogPostJSON, err := json.Marshal(blogPost)
         if err != nil {
-            // TODO: return a 500 page
-            httpUtils.Send404Page(w, r)
+            httpUtils.Send500Page(w, r)
             return
         }
 

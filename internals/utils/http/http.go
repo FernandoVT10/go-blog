@@ -54,3 +54,8 @@ func Send404Page(w http.ResponseWriter, r *http.Request) {
     page := html.NotFound(GetPageData(r))
     SendNode(w, r, page)
 }
+
+func Send500Page(w http.ResponseWriter, r *http.Request) {
+    page := html.ServerError(GetPageData(r))
+    SendNode(w, r, page)
+}

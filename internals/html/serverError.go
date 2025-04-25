@@ -5,12 +5,12 @@ import (
     . "maragu.dev/gomponents/html"
 )
 
-func NotFound(pageData PageData) Node {
-    return page("404", nil,
+func ServerError(pageData PageData) Node {
+    return page("500", nil,
         navbar(pageData.IsAuthenticated),
         Div(Class("error-message"),
-            H1(Text("404")),
-            H2(Text("Page Not Found")),
+            H1(Text("500")),
+            H2(Text("Internal Server Error")),
         ),
     )
 }

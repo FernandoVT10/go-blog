@@ -149,3 +149,17 @@ button {
         max-width: 100%;
     }
 }
+
+.error-message {
+    color: hsl(var(--hsl-blue));
+    text-align: center;
+    padding-top: 100px;
+
+    & > h1 {
+        font-size: var(--fz-35);
+    }
+
+    & > h2 {
+        font-size: var(--fz-20);
+    }
+}
