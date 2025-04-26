@@ -5,7 +5,9 @@ import (
     "path"
     "fmt"
     "os"
+
     "github.com/FernandoVT10/go-blog/internals/db"
+    "github.com/joho/godotenv"
 
     httpUtils "github.com/FernandoVT10/go-blog/internals/utils/http"
 )
@@ -15,6 +17,10 @@ const PORT = 3000
 const UPLOADS_DIR = "./uploads"
 
 func main() {
+    if err := godotenv.Load(); err != nil {
+        panic(err)
+    }
+
     mux := http.NewServeMux()
 
     uploadsFs := http.FileServer(http.Dir(UPLOADS_DIR))

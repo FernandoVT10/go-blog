@@ -4,10 +4,9 @@ import (
     "net/http"
     "errors"
     "github.com/golang-jwt/jwt/v5"
-)
 
-// TODO: get this key from a file or envfile
-const JWT_SECRET = "hello"
+    "github.com/FernandoVT10/go-blog/internals/config"
+)
 
 func Login(password string) (string, error) {
     if password != "secret" {
@@ -15,7 +14,7 @@ func Login(password string) (string, error) {
     }
 
     t := jwt.New(jwt.SigningMethodHS512)
-    signedStr, err := t.SignedString([]byte(JWT_SECRET))
+    signedStr, err := t.SignedString(config.GetEnv().JwtSecret)
     if err != nil {
         println(err.Error())
         return "", errors.New("Server Error")
@@ -31,7 +30,7 @@ func validateToken(token string) bool {
     )
 
     _, err := parser.Parse(token, func(_ *jwt.Token) (any, error) {
-        return []byte(JWT_SECRET), nil
+        return config.GetEnv().JwtSecret, nil
     })
 
     return err == nil
