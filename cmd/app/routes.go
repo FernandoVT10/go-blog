@@ -5,6 +5,7 @@ import (
     "net/http"
     "github.com/FernandoVT10/go-blog/internals/controllers"
     "github.com/FernandoVT10/go-blog/internals/middlewares"
+    "github.com/FernandoVT10/go-blog/internals/config"
     "github.com/FernandoVT10/go-blog/internals/router"
     "github.com/FernandoVT10/go-blog/internals/utils"
     "github.com/FernandoVT10/go-blog/internals/html"
@@ -232,8 +233,7 @@ func defineApi(router *router.Router) {
             Path: "/",
             MaxAge: COOKIE_MAX_AGE,
             HttpOnly: true,
-            // TODO: should be true if it's in production
-            Secure: false,
+            Secure: config.GetEnv().Production,
             SameSite: http.SameSiteStrictMode,
         }
 

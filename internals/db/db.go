@@ -1,14 +1,18 @@
 package db
 
 import (
-    "time"
     "context"
-    "go.mongodb.org/mongo-driver/v2/mongo"
+    "fmt"
+    "time"
+
     "go.mongodb.org/mongo-driver/v2/bson"
+    "go.mongodb.org/mongo-driver/v2/mongo"
     "go.mongodb.org/mongo-driver/v2/mongo/options"
+    "go.mongodb.org/mongo-driver/v2/mongo/readpref"
+
+    "github.com/FernandoVT10/go-blog/internals/config"
 )
 
-const MONGO_URI = "mongodb://localhost:27017/"
 const DB_TIMEOUT = 500 * time.Millisecond
 
 const DescendingSort = -1;
@@ -17,12 +21,23 @@ const AscendingSort = 1;
 var db *mongo.Database
 
 func Connect() {
-    client, err := mongo.Connect(options.Client().ApplyURI(MONGO_URI))
+    fmt.Println("[INFO] Connecting to mongo database...")
+    client, err := mongo.Connect(options.Client().ApplyURI(config.GetEnv().MongoUri))
     if err != nil {
         panic(err)
     }
 
-    db = client.Database("go-blog")
+    ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+    defer cancel()
+    err = client.Ping(ctx, readpref.Primary())
+
+    if err != nil {
+        panic(err)
+    }
+
+    fmt.Println("[INFO] Database connected successfully")
+
+    db = client.Database(config.GetEnv().MongoDbName)
 }
 
 type Model struct {

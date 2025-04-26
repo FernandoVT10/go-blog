@@ -8,11 +8,14 @@ import (
 type Env struct {
     JwtSecret []byte
     UploadsUrl string
+    Production bool
+    MongoUri string
+    MongoDbName string
     // used to know when the environment has been loaded
     loaded bool
 }
 
-var env_keys = []string{"JWT_SECRET_KEY", "UPLOADS_URL"}
+var env_keys = []string{"JWT_SECRET_KEY", "UPLOADS_URL", "MONGO_URI", "MONGO_DB_NAME"}
 
 var env Env
 
@@ -30,6 +33,9 @@ func GetEnv() Env {
     env = Env{
         JwtSecret: []byte(os.Getenv("JWT_SECRET_KEY")),
         UploadsUrl: os.Getenv("UPLOADS_URL"),
+        Production: os.Getenv("GO_ENV") == "production",
+        MongoUri: os.Getenv("MONGO_URI"),
+        MongoDbName: os.Getenv("MONGO_DB_NAME"),
         loaded: true,
     }
 
