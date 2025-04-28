@@ -13,7 +13,7 @@ import (
 )
 
 const PUBLIC_DIR = "./public"
-const PORT = 3000
+const PORT = 3001
 const UPLOADS_DIR = "./uploads"
 
 func main() {
