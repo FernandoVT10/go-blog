@@ -7,14 +7,7 @@ import fs from "fs";
 import lv from "livereload";
 import { createErrorSnippet, color } from "./utils.ts";
 
-const ROOT_DIR = path.resolve("./");
-const PRODUCTION = false;
-const OUT_DIR = path.resolve(ROOT_DIR, "public/build");
-const JS_OUT_DIR = path.resolve(OUT_DIR, "js/");
-const TSCONFIG_FILE = path.resolve(ROOT_DIR, "src/tsconfig.json");
-const SASS_FILE = path.resolve(ROOT_DIR, "src/scss/main.scss");
-const SASS_DIR = path.resolve(ROOT_DIR, "src/scss");
-const OUT_CSS_FILE = path.resolve(OUT_DIR, "main.css");
+import * as config from "./config.ts";
 
 function esbuildOnEnd(res: es.BuildResult) {
     for(const error of res.errors) {
@@ -41,14 +34,14 @@ function esbuildOnEnd(res: es.BuildResult) {
 }
 
 async function esbuild() {
-    const inputGlob = path.resolve(ROOT_DIR, "src/ts/entries/*.ts");
+    const inputGlob = path.resolve(config.ROOT_DIR, "src/ts/entries/*.ts");
     const ctx = await es.context({
         bundle: true,
         splitting: true,
-        minify: PRODUCTION,
+        minify: false,
         format: "esm",
         treeShaking: true,
-        outdir: JS_OUT_DIR,
+        outdir: config.JS_OUT_DIR,
         entryPoints: [inputGlob],
         logLevel: "silent",
         plugins: [
@@ -78,7 +71,7 @@ function reportDiagnostic(diagnostic: ts.Diagnostic) {
         const line = pos.line + 1;
         const column = pos.character;
 
-        const filePath = path.relative(ROOT_DIR, file.fileName);
+        const filePath = path.relative(config.ROOT_DIR, file.fileName);
         const message = typeof(diagnostic.messageText) === "string"
             ? diagnostic.messageText : diagnostic.messageText.messageText;
 
@@ -103,7 +96,7 @@ function tscWatcher(diagnostic: ts.Diagnostic) {
 async function tsc() {
     const program = ts.createSemanticDiagnosticsBuilderProgram;
     const host = ts.createWatchCompilerHost(
-        TSCONFIG_FILE,
+        config.TSCONFIG_FILE,
         { noEmit: true },
         ts.sys,
         program,
@@ -115,11 +108,11 @@ async function tsc() {
 
 async function buildScss() {
     try {
-        const res = await sass.compileAsync(SASS_FILE, {
-            style: PRODUCTION ? "compressed" : "expanded",
+        const res = await sass.compileAsync(config.SASS_FILE, {
+            style: "expanded",
         });
-        await fs.promises.mkdir(path.dirname(OUT_CSS_FILE), { recursive: true });
-        await fs.promises.writeFile(OUT_CSS_FILE, res.css);
+        await fs.promises.mkdir(path.dirname(config.OUT_CSS_FILE), { recursive: true });
+        await fs.promises.writeFile(config.OUT_CSS_FILE, res.css);
         console.log(color.magenta("Done scss - Watching..."));
     } catch(e) {
         if(e instanceof sass.Exception)
@@ -131,7 +124,7 @@ async function buildScss() {
 async function sassBuilder() {
     await buildScss();
 
-    fs.watch(SASS_DIR, { recursive: true }, async (event) => {
+    fs.watch(config.SASS_DIR, { recursive: true }, async (event) => {
         if(event === "change") {
             await buildScss();
         }
@@ -144,7 +137,7 @@ function livereload() {
     }, () => {
         console.log(color.green("Livereload server started!"));
     });
-    server.watch(OUT_DIR);
+    server.watch(config.BUILD_DIR);
 }
 
 async function main() {
