@@ -3,15 +3,15 @@ package main
 import (
     "encoding/json"
     "net/http"
-    "github.com/FernandoVT10/go-blog/internals/controllers"
-    "github.com/FernandoVT10/go-blog/internals/middlewares"
-    "github.com/FernandoVT10/go-blog/internals/config"
-    "github.com/FernandoVT10/go-blog/internals/router"
-    "github.com/FernandoVT10/go-blog/internals/utils"
-    "github.com/FernandoVT10/go-blog/internals/html"
-    "github.com/FernandoVT10/go-blog/internals/db"
+    "github.com/FernandoVT10/go-blog/app/controllers"
+    "github.com/FernandoVT10/go-blog/app/middlewares"
+    "github.com/FernandoVT10/go-blog/app/config"
+    "github.com/FernandoVT10/go-blog/app/router"
+    "github.com/FernandoVT10/go-blog/app/utils"
+    "github.com/FernandoVT10/go-blog/app/html"
+    "github.com/FernandoVT10/go-blog/app/db"
 
-    httpUtils "github.com/FernandoVT10/go-blog/internals/utils/http"
+    httpUtils "github.com/FernandoVT10/go-blog/app/utils/http"
 )
 
 const HOME_BLOG_POSTS_LIMIT = 3

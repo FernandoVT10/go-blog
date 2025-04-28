@@ -5,11 +5,11 @@ import (
     "errors"
     "github.com/golang-jwt/jwt/v5"
 
-    "github.com/FernandoVT10/go-blog/internals/config"
+    "github.com/FernandoVT10/go-blog/app/config"
 )
 
 func Login(password string) (string, error) {
-    if password != "secret" {
+    if password != config.GetEnv().AdminPass {
         return "", errors.New("Incorrect Password")
     }
 

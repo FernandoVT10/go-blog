@@ -3,8 +3,8 @@ package html
 import (
     "fmt"
 
-    "github.com/FernandoVT10/go-blog/internals/db"
-    "github.com/FernandoVT10/go-blog/internals/utils"
+    "github.com/FernandoVT10/go-blog/app/db"
+    "github.com/FernandoVT10/go-blog/app/utils"
     . "maragu.dev/gomponents"
     . "maragu.dev/gomponents/html"
 )

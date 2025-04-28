@@ -9,12 +9,12 @@ import (
     "fmt"
     "os"
 
-    "github.com/FernandoVT10/go-blog/internals/config"
-    "github.com/FernandoVT10/go-blog/internals/db"
+    "github.com/FernandoVT10/go-blog/app/config"
+    "github.com/FernandoVT10/go-blog/app/db"
     "go.mongodb.org/mongo-driver/v2/bson"
     "go.mongodb.org/mongo-driver/v2/mongo/options"
 
-    fileUtils "github.com/FernandoVT10/go-blog/internals/utils/file"
+    fileUtils "github.com/FernandoVT10/go-blog/app/utils/file"
 )
 
 const POSTS_UPLOADS_DIR = "./uploads/posts"

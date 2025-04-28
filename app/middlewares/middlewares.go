@@ -2,10 +2,10 @@ package middlewares
 
 import (
     "net/http"
-    "github.com/FernandoVT10/go-blog/internals/controllers"
-    "github.com/FernandoVT10/go-blog/internals/router"
+    "github.com/FernandoVT10/go-blog/app/controllers"
+    "github.com/FernandoVT10/go-blog/app/router"
 
-    httpUtils "github.com/FernandoVT10/go-blog/internals/utils/http"
+    httpUtils "github.com/FernandoVT10/go-blog/app/utils/http"
 )
 
 func AuthPage() router.Middleware {

@@ -11,11 +11,12 @@ type Env struct {
     Production bool
     MongoUri string
     MongoDbName string
+    AdminPass string
     // used to know when the environment has been loaded
     loaded bool
 }
 
-var env_keys = []string{"JWT_SECRET_KEY", "UPLOADS_URL", "MONGO_URI", "MONGO_DB_NAME"}
+var env_keys = []string{"JWT_SECRET_KEY", "UPLOADS_URL", "MONGO_URI", "MONGO_DB_NAME", "ADMIN_PASSWORD"}
 
 var env Env
 
@@ -36,6 +37,7 @@ func GetEnv() Env {
         Production: os.Getenv("GO_ENV") == "production",
         MongoUri: os.Getenv("MONGO_URI"),
         MongoDbName: os.Getenv("MONGO_DB_NAME"),
+        AdminPass: os.Getenv("ADMIN_PASSWORD"),
         loaded: true,
     }
 

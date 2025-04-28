@@ -4,8 +4,8 @@ import (
     "errors"
     "net/http"
     "encoding/json"
-    "github.com/FernandoVT10/go-blog/internals/html"
-    "github.com/FernandoVT10/go-blog/internals/controllers"
+    "github.com/FernandoVT10/go-blog/app/html"
+    "github.com/FernandoVT10/go-blog/app/controllers"
 
     g "maragu.dev/gomponents"
 )

@@ -10,7 +10,7 @@ import (
     "go.mongodb.org/mongo-driver/v2/mongo/options"
     "go.mongodb.org/mongo-driver/v2/mongo/readpref"
 
-    "github.com/FernandoVT10/go-blog/internals/config"
+    "github.com/FernandoVT10/go-blog/app/config"
 )
 
 const DB_TIMEOUT = 500 * time.Millisecond

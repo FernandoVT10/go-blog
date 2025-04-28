@@ -6,10 +6,10 @@ import (
     "fmt"
     "os"
 
-    "github.com/FernandoVT10/go-blog/internals/db"
+    "github.com/FernandoVT10/go-blog/app/db"
     "github.com/joho/godotenv"
 
-    httpUtils "github.com/FernandoVT10/go-blog/internals/utils/http"
+    httpUtils "github.com/FernandoVT10/go-blog/app/utils/http"
 )
 
 const PUBLIC_DIR = "./public"
