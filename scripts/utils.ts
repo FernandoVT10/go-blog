@@ -1,6 +1,6 @@
-import path from "path";
+import fs from "fs";
 
-export const ROOT_DIR = path.resolve("./");
+import { BUILD_DIR } from "./config";
 
 function getColoredText(codeColor: number, text: string): string {
     return `\x1b[${codeColor}m${text}\x1b[0m`;
@@ -53,4 +53,9 @@ export function createErrorSnippet(err: SnippetError): string {
     error += `${spaces(4 + err.line.toString().length)} |${spaces(err.column)}${errorMark}`;
 
     return error;
+}
+
+export async function cleanUp() {
+    console.log("Cleaning up build folder...")
+    await fs.promises.rm(BUILD_DIR, { recursive: true, force: true });
 }
