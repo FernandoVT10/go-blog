@@ -2,7 +2,6 @@ package html
 
 import (
     "fmt"
-    "os"
 
     "github.com/FernandoVT10/go-blog/app/config"
     . "maragu.dev/gomponents"
@@ -17,8 +16,6 @@ type PageData struct {
 }
 
 func page(title string, headNodes []HeadNodes, children ...Node) Node {
-    dev := os.Getenv("APP_ENV") != "production"
-
     commonHeadNodes := []Node {
         Link(Rel("stylesheet"), Href("/build/main.css")),
         Meta(Name("viewport"), Content("width=device-width, initial-scale=1.0")),
