@@ -3,9 +3,11 @@ package html
 import (
     "fmt"
     "os"
+
+    "github.com/FernandoVT10/go-blog/app/config"
     . "maragu.dev/gomponents"
-    . "maragu.dev/gomponents/html"
     . "maragu.dev/gomponents/components"
+    . "maragu.dev/gomponents/html"
 )
 
 type HeadNodes = Node
@@ -21,7 +23,7 @@ func page(title string, headNodes []HeadNodes, children ...Node) Node {
         Link(Rel("stylesheet"), Href("/build/main.css")),
         Meta(Name("viewport"), Content("width=device-width, initial-scale=1.0")),
         Link(Rel("icon"), Type("image/svg+xml"), Href("/favicon.svg")),
-        If(dev, Script(Src("http://localhost:35729/livereload.js"))),
+        If(!config.GetEnv().Production, Script(Src("http://localhost:35729/livereload.js"))),
     }
 
     return HTML5(HTML5Props{
