@@ -1,4 +1,5 @@
 const NUMBER_OF_POINTS = 20;
+const MIN_SCREEN_WIDTH_FOR_ANIM = 1000;
 
 class Vec2 {
     x: number;
@@ -106,7 +107,11 @@ window.onload = () => {
     element = document.getElementById(id) as HTMLDivElement;
 
     if(element) {
-        loop();
+        if(window.innerWidth > MIN_SCREEN_WIDTH_FOR_ANIM) {
+            loop();
+        } else {
+            updatePolygon();
+        }
     } else {
         console.error(`Element with id ${id} doesn't exist`);
     }
