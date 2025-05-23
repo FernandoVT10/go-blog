@@ -1,6 +1,4 @@
-const NUMBER_OF_POLYGONS = 20;
-
-let element: HTMLDivElement;
+const NUMBER_OF_POINTS = 20;
 
 class Vec2 {
     x: number;
@@ -22,17 +20,28 @@ type Point = {
     vel: Vec2;
 };
 
+let element: HTMLDivElement;
+
+// returns random number from 0 to n
+function rand(n: number) {
+    return Math.round(Math.random() * n);
+}
+
 function initPoints(): Point[] {
     let points: Point[] = [];
 
-    for(let i = 0; i < NUMBER_OF_POLYGONS; i++) {
+    for(let i = 0; i < NUMBER_OF_POINTS; i++) {
         const pos = new Vec2();
-        pos.x = Math.floor(Math.random() * 100);
-        pos.y = Math.floor(Math.random() * 100);
+        const maxPos = 100;
+        pos.x = rand(maxPos);
+        pos.y = rand(maxPos);
 
         const vel = new Vec2();
-        vel.x = (1 - Math.round(Math.random() * 2)) * 0.1 + 0.1;
-        vel.y = (1 - Math.round(Math.random() * 2)) * 0.1 + 0.1;
+        const minVel = 0.1;
+        const weight = 0.1;
+        // the first part gives us a number from -1 to 1
+        vel.x = (1 - rand(2)) * weight + minVel;
+        vel.y = (1 - rand(2)) * weight + minVel;
 
         points.push({
             pos,
@@ -67,6 +76,7 @@ function updatePoints() {
     }
 }
 
+// sets the polygon style (read more: https://developer.mozilla.org/en-US/docs/Web/CSS/basic-shape/polygon)
 function updatePolygon() {
     let pointsString = "";
 
@@ -95,9 +105,9 @@ window.onload = () => {
     const id = "c-json-parser-bg";
     element = document.getElementById(id) as HTMLDivElement;
 
-    if(!element) {
+    if(element) {
+        loop();
+    } else {
         console.error(`Element with id ${id} doesn't exist`);
     }
-
-    requestAnimationFrame(loop);
 };

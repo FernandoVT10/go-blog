@@ -7,7 +7,7 @@ import (
 )
 
 func logo() Node {
-    return Pre(Class("c-json-parser__logo"), Text(`
+    return Pre(Class("c-json-parser-header__logo"), Text(`
  ▄████▄      ▄▄▄██▀▀▀  ██████  ▒█████   ███▄    █        ██▓███   ▄▄▄       ██▀███    ██████ ▓█████  ██▀███
 ▒██▀ ▀█        ▒██   ▒██    ▒ ▒██▒  ██▒ ██ ▀█   █       ▓██░  ██▒▒████▄    ▓██ ▒ ██▒▒██    ▒ ▓█   ▀ ▓██ ▒ ██▒
 ▒▓█    ▄       ░██   ░ ▓██▄   ▒██░  ██▒▓██  ▀█ ██▒      ▓██░ ██▓▒▒██  ▀█▄  ▓██ ░▄█ ▒░ ▓██▄   ▒███   ▓██ ░▄█ ▒
@@ -21,12 +21,65 @@ func logo() Node {
 `))
 }
 
+func description() Node {
+    return Section(Class("c-json-parser-description"),
+        P(Class("c-json-parser-description__text"),
+            Text(`
+                A little library that parses json into useful C structs.
+                There are a lot of helper functions missing,
+                that is because this project was meant to be a learning project for me.
+                A project to learn how to work with Lexers and Parsers.
+            `),
+        ),
+    )
+}
+
+const images_folder = "/images/cJsonParser/";
+
+func feature(image string, title string, description string) Node {
+    return Article(Class("c-json-parser-feature"),
+        Div(Class("c-json-parser-feature__img-container"),
+            Img(
+                Class("c-json-parser-feature__img"),
+                Src(images_folder + image),
+                Alt("Image"),
+            ),
+        ),
+        Div(Class("c-json-parser-feature__content"),
+            H3(Class("c-json-parser-feature__title"), Text(title)),
+            P(Class("c-json-parser-feature__description"),
+                Text(description),
+            ),
+        ),
+    )
+}
+
+func features() Node {
+    return Section(Class("c-json-parser-section"),
+        H2(Class("c-json-parser-subtitle"), Text("Features")),
+        Section(Class("c-json-parser-features"),
+            feature(
+                "Error-Logging.webp",
+                "Complex syntax error logging",
+
+                `When an error happens, you know where and why it happened.
+                The parser prints the line together with a mark showing exactly where the error is.`,
+            ),
+            feature(
+                "Performance.webp",
+                "Simple with great performance",
+
+                `It's a super simple project with great performance, taking 0.14s (in average) to parse a 40MB json file.`,
+            ),
+        ),
+    )
+}
 
 func challenges() Node {
-    return Section(Class("c-json-parser__section-challenges"),
-        H2(Class("c-json-parser__subtitle"), Text("Challenges I had to face")),
-        Ul(Class("c-json-parser__challenges"),
-            Li(Class("c-json-parser__challenge"),
+    return Section(Class("c-json-parser-section"),
+        H2(Class("c-json-parser-subtitle"), Text("Challenges I had to face")),
+        Ul(Class("c-json-parser-challenges"),
+            Li(Class("c-json-parser-challenge"),
                 P(
                     Text("I had to learn new memory management strategies (like "),
                     A(Href("https://fvtblog.com/blog/posts/68260672cdab662d98a4b9ce"), Text("arenas")),
@@ -34,7 +87,7 @@ func challenges() Node {
                 ),
             ),
 
-            Li(Class("c-json-parser__challenge"),
+            Li(Class("c-json-parser-challenge"),
                 P(
                     Text("Learning about "),
                     Strong(Text("lexers")),
@@ -44,7 +97,7 @@ func challenges() Node {
                 ),
             ),
 
-            Li(Class("c-json-parser__challenge"),
+            Li(Class("c-json-parser-challenge"),
                 P(
                     Text(`
                         One of the most challenging things I did in this project, was the way to report syntax errors.
@@ -54,7 +107,7 @@ func challenges() Node {
                 ),
             ),
 
-            Li(Class("c-json-parser__challenge"),
+            Li(Class("c-json-parser-challenge"),
                 P(
                     Text("How can I parse json into "),
                     Strong(Text("C")),
@@ -67,50 +120,19 @@ func challenges() Node {
     )
 }
 
-const images_folder = "/images/cJsonParser/";
-
-func features() Node {
-    return Section(Class("c-json-parser__features-section"),
-        H2(Class("c-json-parser__subtitle"), Text("Features")),
-        Section(Class("c-json-parser__features"),
-            Article(Class("c-json-parser__feature"),
-                Img(
-                    Class("c-json-parser__feature-img"),
-                    Src(images_folder + "Error-Logging.webp"),
-                    Alt("Performance Image"),
-                ),
-                Div(Class("c-json-parser__feature-content"),
-                    H3(Class("c-json-parser__feature-title"), Text("Complex syntax error logging")),
-                    P(Class("c-json-parser__feature-description"),
-                        Text(`
-                            When an error happens, you know where and why it happened.
-                            The parser prints the line together with a mark showing exactly where the error is.
-                        `),
-                    ),
-                ),
-            ),
-
-            Article(Class("c-json-parser__feature"),
-                Img(
-                    Class("c-json-parser__feature-img"),
-                    Src(images_folder + "Performance.webp"),
-                    Alt("Performance Image"),
-                ),
-                Div(Class("c-json-parser__feature-content"),
-                    H3(Class("c-json-parser__feature-title"), Text("Simple with great performance")),
-                    P(Class("c-json-parser__feature-description"),
-                        Text(`
-                            It's a super simple project with great performance, taking 0.14s (in average) to parse a 40MB json file.
-                        `),
-                    ),
-                ),
-            ),
+func learnings() Node {
+    return Section(Class("c-json-parser-section"),
+        H2(Class("c-json-parser-subtitle"), Text("What I've learned")),
+        P(Class("c-json-parser-learnings"),
+            Text("I have learned to manage the memory more efficiently, to think more about better ways to orginize my code to keep it simple and clean."),
+            Br(),
+            Text("I also have acquired a better way of learning through using notes."),
+            Br(),
+            Text("Not trying to achieve perfectionism is a greate learning. A phrase that has helped me with this states that \"the cleanest code is the code that has not been written.\""),
+            Br(),
+            Text("And finally, a learning that will stick with me forever. Reading good code can help you (in this case jlox helped me a lot) to get better at coding."),
         ),
     )
-}
-
-func learnings() Node {
-    return Section(Class("c-json-parser__learnings"))
 }
 
 func CJsonParser() Node {
@@ -120,23 +142,14 @@ func CJsonParser() Node {
             utils.EsmJs("cJsonParser"),
         },
         Article(Class("c-json-parser"),
-            Header(Class("c-json-parser__header"),
+            Header(Class("c-json-parser-header"),
                 logo(),
             ),
-            Section(Class("c-json-parser__description"),
-                P(Class("c-json-parser__description-p"),
-                    Text(`
-                        A little library that parses json into useful C structs.
-                        There are a lot of helper functions missing,
-                        that is because this project was meant to be a learning project for me.
-                        A project to learn how to work with Lexers and Parsers.
-                    `),
-                ),
-            ),
+            description(),
             features(),
             challenges(),
             learnings(),
-            Div(Class("c-json-parser__bg"), Div(ID("c-json-parser-bg"))),
+            Div(Class("c-json-parser-bg"), Div(ID("c-json-parser-bg"))),
         ),
     )
 }
