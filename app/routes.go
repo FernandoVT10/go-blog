@@ -78,6 +78,10 @@ func definePages(router *router.Router) {
         page := html.Login(httpUtils.GetPageData(r))
         httpUtils.SendNode(w, r, page)
     })
+
+    router.Get("/projects/c-json-parser", func(w http.ResponseWriter, r *http.Request) {
+        httpUtils.SendNode(w, r, html.CJsonParser())
+    })
 }
 
 type StringMap map[string]string

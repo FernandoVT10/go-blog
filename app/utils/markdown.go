@@ -37,19 +37,7 @@ func getCustomStyle() (*chroma.Style, error) {
         chroma.NameBuiltin: red,
         chroma.NameBuiltinPseudo: red,
 
-        // TODO: this
-        chroma.NameClass: "#f00",
-        chroma.NameConstant: "#f00",
-        chroma.NameDecorator: "#ff0000",
-        chroma.NameEntity: "#f00",
-        chroma.NameException: "#f00",
         chroma.NameFunction: blue,
-        chroma.NameKeyword: "#f00",
-        chroma.NameLabel: "#f00",
-        chroma.NameNamespace: "#f00",
-        chroma.NameOperator: "#f00",
-        chroma.NameProperty: "#f00",
-        chroma.NameVariable: "#f00",
 
         chroma.NameTag: peach,
 
@@ -58,11 +46,13 @@ func getCustomStyle() (*chroma.Style, error) {
         chroma.LiteralStringAffix: "#f00",
 
         chroma.Punctuation: red,
-        chroma.KeywordDeclaration: mauve,
+        chroma.KeywordType: mauve,
         chroma.Keyword: mauve,
 
         chroma.Comment: gray,
         chroma.Operator: blue,
+
+        chroma.LiteralNumber: peach,
     }
 
     style, err := chroma.NewStyle("custom", entries)
